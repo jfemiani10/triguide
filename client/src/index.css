@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --background: #060b12;
+  --background-alt: #0d1522;
+  --surface: rgba(15, 25, 39, 0.82);
+  --surface-strong: rgba(9, 16, 28, 0.94);
+  --surface-muted: rgba(88, 109, 136, 0.15);
+  --border: rgba(114, 140, 171, 0.2);
+  --text: #edf5ff;
+  --muted: #91a5bf;
+  --primary: #46d3a1;
+  --primary-strong: #24b981;
+  --secondary: #46b2ff;
+  --danger: #ff6b6b;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: "Segoe UI", "SF Pro Display", sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(70, 178, 255, 0.14), transparent 30%),
+    radial-gradient(circle at 20% 20%, rgba(70, 211, 161, 0.1), transparent 28%),
+    linear-gradient(180deg, #07101b 0%, #04070d 100%);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(145, 165, 191, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(145, 165, 191, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.input-base,
+.textarea-base,
+.select-trigger {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(6, 12, 20, 0.9);
+  color: var(--text);
+  padding: 0.9rem 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-base:focus,
+.textarea-base:focus,
+.select-trigger:focus {
+  border-color: rgba(70, 211, 161, 0.8);
+  box-shadow: 0 0 0 3px rgba(70, 211, 161, 0.16);
+}
+
+.textarea-base {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.page-container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1180px;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3.75rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(70, 211, 161, 0.2);
+  background: rgba(70, 211, 161, 0.08);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #b4f4db;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 16px;
+  }
+}
