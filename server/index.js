@@ -37,9 +37,9 @@ app.get("/health", (_request, response) => {
 });
 
 app.use("/auth", authRoutes);
-app.use("/", profileRoutes);
 app.use("/coach", coachRoutes);
 app.use("/strava", stravaRoutes);
+app.use("/", profileRoutes);
 
 app.use((error, _request, response, _next) => {
   console.error(error);

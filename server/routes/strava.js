@@ -19,6 +19,10 @@ import {
 
 const router = Router();
 
+router.get("/__probe_public", (_request, response) => {
+  return response.json({ ok: true, route: "strava-public-probe-v1" });
+});
+
 function getCallbackRedirect(status, message) {
   const { clientOrigin } = getStravaConfig();
   const url = new URL("/strava", clientOrigin);
