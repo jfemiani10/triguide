@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const RAW_API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_URL = RAW_API_URL.replace(/\/+$/, "");
 
 export function getToken() {
   return localStorage.getItem("triguide_token");
@@ -13,6 +14,7 @@ export function clearToken() {
 }
 
 export async function apiRequest(path, options = {}) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const token = getToken();
   const headers = {
     "Content-Type": "application/json",
@@ -23,7 +25,7 @@ export async function apiRequest(path, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(`${API_URL}${normalizedPath}`, {
     ...options,
     headers,
   });
