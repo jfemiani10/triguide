@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="76" y1="44" x2="430" y2="468" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0E2135"/>
+      <stop offset="1" stop-color="#07101B"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="126" y1="104" x2="388" y2="390" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#46B2FF"/>
+      <stop offset="1" stop-color="#46D3A1"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="183" y1="154" x2="339" y2="342" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EAF6FF"/>
+      <stop offset="1" stop-color="#BDF5E1"/>
+    </linearGradient>
+    <filter id="glow" x="77" y="77" width="358" height="358" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="16" result="effect1_foregroundBlur"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="150" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="2"/>
+  <g filter="url(#glow)" opacity="0.9">
+    <circle cx="256" cy="256" r="146" stroke="url(#ring)" stroke-width="24"/>
+  </g>
+  <circle cx="256" cy="256" r="146" stroke="url(#ring)" stroke-width="18"/>
+
+  <path d="M194 178C194 169.163 201.163 162 210 162H323C331.837 162 339 169.163 339 178C339 186.837 331.837 194 323 194H272V328C272 336.837 264.837 344 256 344C247.163 344 240 336.837 240 328V194H210C201.163 194 194 186.837 194 178Z" fill="url(#mark)"/>
+  <path d="M171 304.5C171 295.939 177.939 289 186.5 289H247.5C256.061 289 263 295.939 263 304.5C263 313.061 256.061 320 247.5 320H186.5C177.939 320 171 313.061 171 304.5Z" fill="#46D3A1"/>
+  <path d="M294.824 261.824C288.773 255.773 288.773 245.962 294.824 239.912L331.412 203.324C337.462 197.273 347.273 197.273 353.324 203.324C359.374 209.374 359.374 219.185 353.324 225.236L316.736 261.824C310.685 267.874 300.874 267.874 294.824 261.824Z" fill="#46B2FF"/>
+</svg>

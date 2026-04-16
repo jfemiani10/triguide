@@ -41,6 +41,26 @@ export const usageLog = sqliteTable("usage_log", {
   created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });
 
+export const stravaConnections = sqliteTable("strava_connections", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  user_id: integer("user_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+  athlete_id: text("athlete_id"),
+  athlete_username: text("athlete_username"),
+  athlete_firstname: text("athlete_firstname"),
+  athlete_lastname: text("athlete_lastname"),
+  profile_medium: text("profile_medium"),
+  profile: text("profile"),
+  city: text("city"),
+  state: text("state"),
+  country: text("country"),
+  access_token: text("access_token").notNull(),
+  refresh_token: text("refresh_token").notNull(),
+  expires_at: text("expires_at").notNull(),
+  scope: text("scope"),
+  connected_at: text("connected_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
 export const activities = sqliteTable("activities", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   user_id: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),

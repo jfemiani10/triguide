@@ -63,6 +63,27 @@ sqlite.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
 
+  CREATE TABLE IF NOT EXISTS strava_connections (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL UNIQUE,
+    athlete_id TEXT,
+    athlete_username TEXT,
+    athlete_firstname TEXT,
+    athlete_lastname TEXT,
+    profile_medium TEXT,
+    profile TEXT,
+    city TEXT,
+    state TEXT,
+    country TEXT,
+    access_token TEXT NOT NULL,
+    refresh_token TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    scope TEXT,
+    connected_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+
   CREATE TABLE IF NOT EXISTS activities (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -77,6 +98,8 @@ sqlite.exec(`
     synced_at TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
+
+  CREATE UNIQUE INDEX IF NOT EXISTS activities_user_strava_id_idx ON activities(user_id, strava_id);
 `);
 
 export const db = drizzle(sqlite, { schema });
