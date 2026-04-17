@@ -19,7 +19,7 @@ export default function LandingPage() {
             <h1 className="font-['Barlow_Condensed'] text-[clamp(4rem,9vw,6.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.03em] text-[var(--accent)]">
               Your AI
               <br />
-              Triathlon Coach
+              <span className="text-[var(--primary)]">Triathlon</span> Coach
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-[var(--text-muted)]">
               TriGuide blends athlete profiling, training context, and activity history into coaching software that feels
@@ -49,9 +49,6 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <p className="text-base leading-7 text-[var(--text-muted)]">
                   Build around race distance, weekly hours, and the discipline that needs the most work before race day.
-                </p>
-                <p className="text-base leading-7 text-[var(--text-muted)]">
-                  Keep every recommendation grounded in the realities of your schedule, durability, and recent work.
                 </p>
               </div>
             </div>
