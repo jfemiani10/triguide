@@ -51,6 +51,7 @@ sqlite.exec(`
     goal TEXT NOT NULL,
     target_race TEXT NOT NULL,
     race_date TEXT,
+    race_date_undetermined INTEGER NOT NULL DEFAULT 0,
     race_distance TEXT NOT NULL,
     goal_finish_time TEXT,
     goal_finish_time_undetermined INTEGER NOT NULL DEFAULT 0,
@@ -143,6 +144,7 @@ ensureColumn("users", "privacy_version", "TEXT NOT NULL DEFAULT '2026-04-16'");
 ensureColumn("athlete_profiles", "health_data_consent_at", "TEXT");
 ensureColumn("coaching_context_entries", "strava_activity_id", "TEXT");
 ensureColumn("athlete_profiles", "race_date", "TEXT");
+ensureColumn("athlete_profiles", "race_date_undetermined", "INTEGER NOT NULL DEFAULT 0");
 ensureColumn("athlete_profiles", "goal_finish_time", "TEXT");
 ensureColumn("athlete_profiles", "goal_finish_time_undetermined", "INTEGER NOT NULL DEFAULT 0");
 

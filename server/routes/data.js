@@ -28,6 +28,7 @@ router.get("/export", async (request, response) => {
       goal: athleteProfiles.goal,
       target_race: athleteProfiles.target_race,
       race_date: athleteProfiles.race_date,
+      race_date_undetermined: athleteProfiles.race_date_undetermined,
       race_distance: athleteProfiles.race_distance,
       goal_finish_time: athleteProfiles.goal_finish_time,
       goal_finish_time_undetermined: athleteProfiles.goal_finish_time_undetermined,

@@ -16,9 +16,9 @@ const defaultForm = {
   goal: "",
   target_race: "",
   race_date: "",
+  race_date_undetermined: false,
   race_distance: "",
   goal_finish_time: "",
-  goal_finish_time_undetermined: false,
   experience_level: "",
   weakest_discipline: "",
   weekly_hours: 6,
@@ -176,9 +176,25 @@ export default function OnboardingPage() {
                 <Input
                   id="race_date"
                   type="date"
-                  value={form.race_date || ""}
+                  value={form.race_date_undetermined ? "" : form.race_date || ""}
                   onChange={(event) => setForm((current) => ({ ...current, race_date: event.target.value }))}
+                  disabled={Boolean(form.race_date_undetermined)}
                 />
+                <label className="mt-3 flex items-center gap-3 text-sm text-[var(--text-muted)]">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-[var(--primary)]"
+                    checked={Boolean(form.race_date_undetermined)}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        race_date_undetermined: event.target.checked,
+                        race_date: event.target.checked ? "" : current.race_date,
+                      }))
+                    }
+                  />
+                  <span>Undetermined race date</span>
+                </label>
               </div>
 
               <div>
@@ -188,26 +204,10 @@ export default function OnboardingPage() {
                   type="text"
                   inputMode="numeric"
                   placeholder="5:12:30"
-                  value={form.goal_finish_time_undetermined ? "" : form.goal_finish_time || ""}
+                  value={form.goal_finish_time || ""}
                   onChange={(event) => setForm((current) => ({ ...current, goal_finish_time: event.target.value }))}
-                  disabled={Boolean(form.goal_finish_time_undetermined)}
                 />
                 <p className="mt-2 text-sm text-[var(--text-muted)]">Enter race duration as hours, minutes, and seconds, for example `5:12:30`.</p>
-                <label className="mt-3 flex items-center gap-3 text-sm text-[var(--text-muted)]">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-[var(--primary)]"
-                    checked={Boolean(form.goal_finish_time_undetermined)}
-                    onChange={(event) =>
-                      setForm((current) => ({
-                        ...current,
-                        goal_finish_time_undetermined: event.target.checked,
-                        goal_finish_time: event.target.checked ? "" : current.goal_finish_time,
-                      }))
-                    }
-                  />
-                  <span>Undetermined time</span>
-                </label>
               </div>
 
               <div>

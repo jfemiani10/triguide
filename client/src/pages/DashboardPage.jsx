@@ -53,10 +53,12 @@ export default function DashboardPage() {
                   <p className="text-lg font-medium text-[var(--text)]">
                     {key === "weekly_hours"
                       ? `${profile?.[key] ?? "-"} hours`
-                      : key === "goal_finish_time"
-                        ? profile?.goal_finish_time_undetermined
+                      : key === "race_date"
+                        ? profile?.race_date_undetermined
                           ? "Undetermined"
-                          : profile?.goal_finish_time || "Not set"
+                          : profile?.race_date || "Not set"
+                      : key === "goal_finish_time"
+                        ? profile?.goal_finish_time || "Not set"
                         : profile?.[key] || "Not set"}
                   </p>
                 </div>

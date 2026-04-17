@@ -23,6 +23,7 @@ export const athleteProfiles = sqliteTable("athlete_profiles", {
   goal: text("goal").notNull(),
   target_race: text("target_race").notNull(),
   race_date: text("race_date"),
+  race_date_undetermined: integer("race_date_undetermined", { mode: "boolean" }).default(false).notNull(),
   race_distance: text("race_distance").notNull(),
   goal_finish_time: text("goal_finish_time"),
   goal_finish_time_undetermined: integer("goal_finish_time_undetermined", { mode: "boolean" }).default(false).notNull(),
