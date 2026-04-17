@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage";
 import StravaPage from "./pages/StravaPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfUsePage from "./pages/TermsOfUsePage";
+import DataPage from "./pages/DataPage";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -80,6 +81,14 @@ function AnimatedRoutes() {
             element={
               <OnboardingGate>
                 <StravaPage />
+              </OnboardingGate>
+            }
+          />
+          <Route
+            path="/data"
+            element={
+              <OnboardingGate>
+                <DataPage />
               </OnboardingGate>
             }
           />

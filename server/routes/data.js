@@ -1,0 +1,108 @@
+import { Router } from "express";
+import { asc, eq } from "drizzle-orm";
+import { db } from "../db/index.js";
+import { activities, athleteProfiles, chatMessages, stravaConnections, users } from "../db/schema.js";
+import { requireAuth } from "../middleware/auth.js";
+
+const router = Router();
+
+router.use(requireAuth);
+
+router.get("/export", async (request, response) => {
+  const [user] = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      created_at: users.created_at,
+      onboarding_complete: users.onboarding_complete,
+      strava_connected: users.strava_connected,
+      demo_messages_remaining: users.demo_messages_remaining,
+    })
+    .from(users)
+    .where(eq(users.id, request.user.id))
+    .limit(1);
+
+  const [athleteProfile] = await db
+    .select({
+      goal: athleteProfiles.goal,
+      target_race: athleteProfiles.target_race,
+      race_distance: athleteProfiles.race_distance,
+      experience_level: athleteProfiles.experience_level,
+      weakest_discipline: athleteProfiles.weakest_discipline,
+      weekly_hours: athleteProfiles.weekly_hours,
+      injuries_limiters: athleteProfiles.injuries_limiters,
+      updated_at: athleteProfiles.updated_at,
+    })
+    .from(athleteProfiles)
+    .where(eq(athleteProfiles.user_id, request.user.id))
+    .limit(1);
+
+  const exportedChatMessages = await db
+    .select({
+      role: chatMessages.role,
+      content: chatMessages.content,
+      created_at: chatMessages.created_at,
+    })
+    .from(chatMessages)
+    .where(eq(chatMessages.user_id, request.user.id))
+    .orderBy(asc(chatMessages.created_at));
+
+  const [stravaConnection] = await db
+    .select({
+      athlete_id: stravaConnections.athlete_id,
+      athlete_username: stravaConnections.athlete_username,
+      athlete_firstname: stravaConnections.athlete_firstname,
+      athlete_lastname: stravaConnections.athlete_lastname,
+      profile_medium: stravaConnections.profile_medium,
+      city: stravaConnections.city,
+      state: stravaConnections.state,
+      country: stravaConnections.country,
+      scope: stravaConnections.scope,
+      connected_at: stravaConnections.connected_at,
+      updated_at: stravaConnections.updated_at,
+    })
+    .from(stravaConnections)
+    .where(eq(stravaConnections.user_id, request.user.id))
+    .limit(1);
+
+  const exportedActivities = await db
+    .select({
+      strava_id: activities.strava_id,
+      sport_type: activities.sport_type,
+      start_date: activities.start_date,
+      distance_meters: activities.distance_meters,
+      moving_time_seconds: activities.moving_time_seconds,
+      avg_heart_rate: activities.avg_heart_rate,
+      elevation_gain: activities.elevation_gain,
+      suffer_score: activities.suffer_score,
+    })
+    .from(activities)
+    .where(eq(activities.user_id, request.user.id))
+    .orderBy(asc(activities.start_date));
+
+  response.setHeader("Content-Type", "application/json");
+  response.setHeader("Content-Disposition", 'attachment; filename="triguide-data-export.json"');
+
+  return response.status(200).send(
+    JSON.stringify(
+      {
+        exported_at: new Date().toISOString(),
+        user: user || null,
+        athlete_profile: athleteProfile || null,
+        chat_messages: exportedChatMessages,
+        strava_connection: stravaConnection || null,
+        activities: exportedActivities,
+      },
+      null,
+      2,
+    ),
+  );
+});
+
+router.delete("/account", async (request, response) => {
+  await db.delete(users).where(eq(users.id, request.user.id));
+  return response.status(204).send();
+});
+
+export default router;

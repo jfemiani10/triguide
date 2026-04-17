@@ -32,6 +32,9 @@ export function PageShell({ children }) {
                 <NavLink to="/profile" className="rounded-xl px-3 py-2 text-[var(--muted)] hover:bg-white/6 hover:text-white">
                   Profile
                 </NavLink>
+                <NavLink to="/data" className="rounded-xl px-3 py-2 text-[var(--muted)] hover:bg-white/6 hover:text-white">
+                  Data & Privacy
+                </NavLink>
                 <Button variant="ghost" onClick={logout} className="rounded-xl px-3 py-2">
                   Log Out
                 </Button>
@@ -54,6 +57,9 @@ export function PageShell({ children }) {
         <footer className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/8 bg-black/20 px-5 py-4 text-sm text-[var(--muted)]">
           <p>TriGuide</p>
           <div className="flex items-center gap-4">
+            <Link to="/data" className="transition hover:text-white">
+              Data & Privacy
+            </Link>
             <Link to="/terms-of-use" className="transition hover:text-white">
               Terms of Use
             </Link>

@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.js";
 import profileRoutes from "./routes/profile.js";
 import coachRoutes from "./routes/coach.js";
 import stravaRoutes from "./routes/strava.js";
+import dataRoutes from "./routes/data.js";
 import "./db/index.js";
 
 dotenv.config();
@@ -39,6 +40,7 @@ app.get("/health", (_request, response) => {
 app.use("/auth", authRoutes);
 app.use("/coach", coachRoutes);
 app.use("/strava", stravaRoutes);
+app.use("/data", dataRoutes);
 app.use("/", profileRoutes);
 
 app.use((error, _request, response, _next) => {

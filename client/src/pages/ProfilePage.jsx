@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ShieldCheck } from "lucide-react";
 import { PageShell } from "../components/ui/page-shell";
 import { Card, CardContent } from "../components/ui/card";
 import { Label } from "../components/ui/label";
@@ -130,6 +132,13 @@ export default function ProfilePage() {
               <p className="text-sm uppercase tracking-[0.14em] text-[var(--muted)]">Messages remaining</p>
               <p className="mt-2 text-3xl font-semibold">{user?.demo_messages_remaining ?? 0}</p>
             </div>
+            <Link
+              to="/data"
+              className="mt-4 inline-flex items-center text-sm text-[var(--secondary)] transition hover:text-white"
+            >
+              <ShieldCheck className="mr-2 h-4 w-4" />
+              Manage data and privacy
+            </Link>
           </CardContent>
         </Card>
       </div>
