@@ -59,12 +59,12 @@ export default function LandingPage() {
               <img
                 src="/hero-cyclist-cutout.png"
                 alt="Time trial cyclist in aerodynamic position"
-                className="h-[620px] w-full translate-y-[18%] object-contain object-right-top"
+                className="h-[520px] w-full translate-y-[24%] object-contain object-right-top md:h-[620px] md:translate-y-[18%]"
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_78%,transparent)] to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_80%,transparent)] to-transparent md:h-[50%]" />
             </div>
 
-            <div className="relative z-10 -mt-44 ml-auto w-full max-w-[88%] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.14)] md:p-8">
+            <div className="relative z-10 -mt-56 ml-auto w-full max-w-[92%] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.14)] md:-mt-44 md:max-w-[88%] md:p-8">
               <div>
                 <p className="kicker">Built For Race Season</p>
                 <p className="mt-3 text-base leading-7 text-[var(--text-muted)]">
