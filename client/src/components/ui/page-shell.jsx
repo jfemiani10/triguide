@@ -1,16 +1,33 @@
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ChevronRight, UserCircle2 } from "lucide-react";
+import { ChevronRight, Moon, Sun, UserCircle2 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { Button } from "./button";
 
 export function PageShell({ children }) {
   const { isAuthenticated, logout } = useAuth();
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") {
+      return "light";
+    }
+
+    return localStorage.getItem("triguide-theme") || "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("triguide-theme", theme);
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  }
 
   return (
     <div className="app-shell">
-      <div className="page-container">
-        <header className="sticky top-0 z-30 mb-10 border-b border-[var(--border)] bg-[var(--surface)]">
-          <div className="flex flex-col gap-4 px-1 py-5 md:flex-row md:items-center md:justify-between">
+      <header className="sticky top-0 z-30 mb-10 w-full border-b border-[var(--border)] bg-[var(--surface)]">
+        <div className="page-container">
+          <div className="flex flex-col gap-4 py-5 md:flex-row md:items-center md:justify-between">
             <Link to="/landing" className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <span className="font-['Barlow_Condensed'] text-3xl font-bold uppercase tracking-[0.04em] text-[var(--accent)]">
@@ -20,42 +37,58 @@ export function PageShell({ children }) {
               </div>
             </Link>
 
-            <nav className="flex flex-wrap items-center gap-1 text-sm">
-              {isAuthenticated ? (
-                <>
-                  <NavLink to="/dashboard" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
-                    Dashboard
-                  </NavLink>
-                  <NavLink to="/coach" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
-                    Coach
-                  </NavLink>
-                  <NavLink to="/profile" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
-                    Profile
-                  </NavLink>
-                  <NavLink to="/data" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
-                    Data & Privacy
-                  </NavLink>
-                  <Button variant="ghost" onClick={logout} className="px-3 py-2">
-                    Log Out
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <NavLink to="/login" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
-                    Log In
-                  </NavLink>
-                  <Link to="/signup">
-                    <Button className="px-4 py-2">Start Training</Button>
-                  </Link>
-                </>
-              )}
-            </nav>
-          </div>
-        </header>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="inline-flex items-center gap-2 rounded-[4px] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-muted)] transition hover:text-[var(--primary)]"
+                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                <span className="font-['JetBrains_Mono'] text-[0.68rem] uppercase tracking-[0.12em]">
+                  {theme === "dark" ? "Light" : "Dark"}
+                </span>
+              </button>
 
+              <nav className="flex flex-wrap items-center gap-1 text-sm">
+                {isAuthenticated ? (
+                  <>
+                    <NavLink to="/dashboard" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                      Dashboard
+                    </NavLink>
+                    <NavLink to="/coach" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                      Coach
+                    </NavLink>
+                    <NavLink to="/profile" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                      Profile
+                    </NavLink>
+                    <NavLink to="/data" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                      Data & Privacy
+                    </NavLink>
+                    <Button variant="ghost" onClick={logout} className="px-3 py-2">
+                      Log Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <NavLink to="/login" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                      Log In
+                    </NavLink>
+                    <Link to="/signup">
+                      <Button className="px-4 py-2">Start Training</Button>
+                    </Link>
+                  </>
+                )}
+              </nav>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="page-container">
         {children}
 
-        <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] px-1 py-6 text-sm text-[var(--text-muted)]">
+        <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] py-6 text-sm text-[var(--text-muted)]">
           <p>TriGuide</p>
           <div className="flex items-center gap-4">
             <Link to="/data" className="transition hover:text-[var(--primary)]">

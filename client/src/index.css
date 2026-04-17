@@ -17,6 +17,23 @@
   --shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111417;
+  --bg-alt: #1b2025;
+  --surface: #181c20;
+  --border: #343a40;
+  --primary: #d84b3c;
+  --primary-dark: #ef6555;
+  --text: #f3eee7;
+  --text-muted: #b9b1a8;
+  --accent: #f3eee7;
+  --muted: #b9b1a8;
+  --secondary: #f3eee7;
+  --danger: #d84b3c;
+  --shadow: 0 1px 6px rgba(0, 0, 0, 0.28);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -52,13 +69,14 @@ textarea {
 
 .app-shell {
   min-height: 100vh;
-  padding: 0 24px 32px;
+  padding: 0 0 32px;
 }
 
 .page-container {
   margin: 0 auto;
   width: 100%;
   max-width: 1240px;
+  padding: 0 24px;
 }
 
 .panel {
@@ -165,7 +183,11 @@ textarea {
 
 @media (max-width: 640px) {
   .app-shell {
-    padding: 0 16px 24px;
+    padding: 0 0 24px;
+  }
+
+  .page-container {
+    padding: 0 16px;
   }
 
   .section-title {
