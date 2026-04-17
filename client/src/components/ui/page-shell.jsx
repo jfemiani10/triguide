@@ -29,11 +29,27 @@ export function PageShell({ children }) {
         <div className="page-container">
           <div className="flex flex-col gap-4 py-5 md:flex-row md:items-center md:justify-between">
             <Link to="/landing" className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-[var(--primary)]"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M22 12H18L15 21L9 3L6 12H2"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
                 <span className="font-['Barlow_Condensed'] text-3xl font-bold uppercase tracking-[0.04em] text-[var(--accent)]">
                   TriGuide
                 </span>
-                <span className="text-[var(--primary)]">/</span>
               </div>
             </Link>
 
