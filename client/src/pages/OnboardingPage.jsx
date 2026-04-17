@@ -185,12 +185,14 @@ export default function OnboardingPage() {
                 <Label htmlFor="goal_finish_time">Goal finish time</Label>
                 <Input
                   id="goal_finish_time"
-                  type="time"
-                  step="1"
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="5:12:30"
                   value={form.goal_finish_time_undetermined ? "" : form.goal_finish_time || ""}
                   onChange={(event) => setForm((current) => ({ ...current, goal_finish_time: event.target.value }))}
                   disabled={Boolean(form.goal_finish_time_undetermined)}
                 />
+                <p className="mt-2 text-sm text-[var(--text-muted)]">Enter race duration as hours, minutes, and seconds, for example `5:12:30`.</p>
                 <label className="mt-3 flex items-center gap-3 text-sm text-[var(--text-muted)]">
                   <input
                     type="checkbox"

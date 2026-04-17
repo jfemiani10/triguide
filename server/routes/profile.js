@@ -27,8 +27,8 @@ function validateProfileInput(payload) {
 
   const goalFinishTime = String(payload?.goal_finish_time || "").trim();
   const goalFinishTimeUndetermined = Boolean(payload?.goal_finish_time_undetermined);
-  if (!goalFinishTimeUndetermined && goalFinishTime && !/^\d{1,2}:\d{2}(:\d{2})?$/.test(goalFinishTime)) {
-    return "goal_finish_time must use HH:MM or HH:MM:SS format";
+  if (!goalFinishTimeUndetermined && goalFinishTime && !/^\d{1,2}:\d{2}:\d{2}$/.test(goalFinishTime)) {
+    return "goal_finish_time must use H:MM:SS or HH:MM:SS format";
   }
 
   return null;

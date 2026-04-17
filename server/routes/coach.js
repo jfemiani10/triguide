@@ -58,7 +58,7 @@ Athlete profile:
 - Goal: ${profile.goal} - ${profile.target_race}
 - Race date: ${profile.race_date || "Not set"}
 - Race distance: ${profile.race_distance}
-- Goal finish time: ${profile.goal_finish_time_undetermined ? "Undetermined" : profile.goal_finish_time || "Not set"}
+- Goal finish time target (race duration): ${profile.goal_finish_time_undetermined ? "Undetermined" : profile.goal_finish_time || "Not set"}
 - Experience: ${profile.experience_level}
 - Weakest discipline: ${profile.weakest_discipline}
 - Available training time: ${profile.weekly_hours} hours/week
