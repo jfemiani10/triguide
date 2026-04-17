@@ -43,11 +43,11 @@ export default function LandingPage() {
           <div className="relative lg:pl-4">
             <div className="relative overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-alt)]">
               <img
-                src="/hero-cyclist.jpeg"
+                src="/hero-cyclist-cutout.png"
                 alt="Time trial cyclist in aerodynamic position"
-                className="h-[540px] w-full object-cover object-center"
+                className="h-[540px] w-full object-contain object-right-top p-4 md:p-6"
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_70%,transparent)] to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_72%,transparent)] to-transparent" />
             </div>
 
             <div className="relative z-10 -mt-28 ml-auto w-full max-w-[88%] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.14)] md:p-8">
