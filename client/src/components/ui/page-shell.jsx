@@ -54,6 +54,9 @@ export function PageShell({ children }) {
         <footer className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/8 bg-black/20 px-5 py-4 text-sm text-[var(--muted)]">
           <p>TriGuide</p>
           <div className="flex items-center gap-4">
+            <Link to="/terms-of-use" className="transition hover:text-white">
+              Terms of Use
+            </Link>
             <Link to="/privacy-policy" className="transition hover:text-white">
               Privacy Policy
             </Link>
