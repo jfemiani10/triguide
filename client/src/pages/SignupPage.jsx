@@ -45,12 +45,14 @@ export default function SignupPage() {
   return (
     <PageShell>
       <div className="mx-auto max-w-md">
-        <Card className="rounded-[32px]">
+        <Card>
           <CardContent className="p-8">
             <div className="mb-8">
               <div className="pill mb-4">Sign Up</div>
-              <h2 className="text-3xl font-semibold tracking-tight">Start building your race plan</h2>
-              <p className="mt-3 text-[var(--muted)]">
+              <h2 className="font-['Barlow_Condensed'] text-5xl font-bold uppercase leading-none text-[var(--accent)]">
+                Start building your race plan
+              </h2>
+              <p className="mt-4 text-base leading-7 text-[var(--text-muted)]">
                 Set up your profile and unlock direct, triathlon-specific coaching guidance.
               </p>
             </div>
@@ -87,7 +89,7 @@ export default function SignupPage() {
                   required
                 />
               </div>
-              <label className="flex items-start gap-3 rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+              <label className="flex items-start gap-3 rounded-[4px] border border-[var(--border)] bg-[var(--bg-alt)] px-4 py-3 text-sm text-[var(--text-muted)]">
                 <input
                   type="checkbox"
                   className="mt-1 h-4 w-4 accent-[var(--primary)]"
@@ -103,17 +105,17 @@ export default function SignupPage() {
                 />
                 <span>
                   I agree to the{" "}
-                  <Link to="/terms-of-use" className="font-semibold text-[var(--secondary)] hover:underline">
+                  <Link to="/terms-of-use" className="font-semibold text-[var(--primary)] hover:underline">
                     Terms of Use
                   </Link>
                   {" "}and{" "}
-                  <Link to="/privacy-policy" className="font-semibold text-[var(--secondary)] hover:underline">
+                  <Link to="/privacy-policy" className="font-semibold text-[var(--primary)] hover:underline">
                     Privacy Policy
                   </Link>
                   .
                 </span>
               </label>
-              <label className="flex items-start gap-3 rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+              <label className="flex items-start gap-3 rounded-[4px] border border-[var(--border)] bg-[var(--bg-alt)] px-4 py-3 text-sm text-[var(--text-muted)]">
                 <input
                   type="checkbox"
                   className="mt-1 h-4 w-4 accent-[var(--primary)]"
@@ -128,7 +130,7 @@ export default function SignupPage() {
                 {submitting ? "Creating account..." : "Create Account"}
               </Button>
             </form>
-            <p className="mt-6 text-sm text-[var(--muted)]">
+            <p className="mt-6 text-sm text-[var(--text-muted)]">
               Already training with us?{" "}
               <Link to="/login" className="font-semibold text-[var(--primary)]">
                 Log in

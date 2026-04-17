@@ -104,17 +104,19 @@ export default function TermsOfUsePage() {
   return (
     <PageShell>
       <div className="mx-auto max-w-4xl space-y-6">
-        <Card className="rounded-[36px] border-[rgba(70,178,255,0.16)] bg-[linear-gradient(180deg,rgba(8,17,30,0.96),rgba(5,9,16,0.98))]">
+        <Card>
           <CardContent className="p-8 md:p-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
               <div className="max-w-2xl">
                 <div className="pill mb-4">Legal</div>
-                <h2 className="text-4xl font-semibold tracking-tight">Terms of Use</h2>
-                <p className="mt-4 text-lg leading-8 text-[var(--muted)]">
+                <h2 className="font-['Barlow_Condensed'] text-5xl font-bold uppercase leading-none text-[var(--accent)]">
+                  Terms of Use
+                </h2>
+                <p className="mt-4 text-lg leading-8 text-[var(--text-muted)]">
                   Last updated April 17, 2026. These terms govern access to and use of TriGuide.
                 </p>
               </div>
-              <div className="flex h-16 w-16 items-center justify-center rounded-[24px] bg-[var(--secondary)]/14 text-[var(--secondary)]">
+              <div className="flex h-16 w-16 items-center justify-center border border-[var(--border)] bg-[var(--bg-alt)] text-[var(--accent)]">
                 <FileText className="h-8 w-8" />
               </div>
             </div>
@@ -122,7 +124,7 @@ export default function TermsOfUsePage() {
             <div className="mt-8 flex flex-wrap gap-3 text-sm">
               <Link
                 to="/landing"
-                className="inline-flex items-center rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-[var(--muted)] transition hover:text-white"
+                className="inline-flex items-center rounded-[4px] border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-[var(--text-muted)] transition hover:text-[var(--primary)]"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to TriGuide
@@ -131,14 +133,14 @@ export default function TermsOfUsePage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[32px]">
+        <Card>
           <CardContent className="space-y-6 p-6 md:p-8">
             <div>
-              <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">Owner</p>
+              <p className="kicker">Owner</p>
               <p className="mt-2 text-lg font-semibold">Jonah Femiani</p>
-              <p className="mt-2 text-[var(--muted)]">
+              <p className="mt-2 text-[var(--text-muted)]">
                 Questions about these Terms can be sent to{" "}
-                <a className="text-[var(--secondary)] hover:underline" href="mailto:jonah.femiani07@gmail.com">
+                <a className="text-[var(--primary)] hover:underline" href="mailto:jonah.femiani07@gmail.com">
                   jonah.femiani07@gmail.com
                 </a>
                 .
@@ -150,7 +152,7 @@ export default function TermsOfUsePage() {
                 <a
                   key={section.id}
                   href={`#${section.id}`}
-                  className="rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-white transition hover:border-[var(--secondary)]/30 hover:bg-white/6"
+                  className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
                 >
                   {section.title}
                 </a>
@@ -160,10 +162,12 @@ export default function TermsOfUsePage() {
         </Card>
 
         {sections.map((section) => (
-          <Card key={section.id} id={section.id} className="rounded-[32px]">
+          <Card key={section.id} id={section.id}>
             <CardContent className="p-6 md:p-8">
-              <h3 className="text-2xl font-semibold tracking-tight">{section.title}</h3>
-              <div className="mt-4 space-y-4 text-[var(--muted)]">
+              <h3 className="font-['Barlow_Condensed'] text-4xl font-bold uppercase leading-none text-[var(--accent)]">
+                {section.title}
+              </h3>
+              <div className="mt-4 space-y-4 text-[var(--text-muted)]">
                 {section.paragraphs.map((paragraph) => (
                   <p key={paragraph} className="leading-7">
                     {paragraph}

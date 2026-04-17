@@ -26,22 +26,29 @@ export default function DashboardPage() {
       />
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="rounded-[32px]">
+        <Card>
           <CardContent className="p-8">
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">Athlete profile</p>
-                <h3 className="mt-2 text-2xl font-semibold">Current training context</h3>
+                <p className="kicker">Athlete Profile</p>
+                <h3 className="mt-2 font-['Barlow_Condensed'] text-4xl font-bold uppercase leading-none text-[var(--accent)]">
+                  Current training context
+                </h3>
               </div>
               <Link to="/profile">
                 <Button variant="secondary">Edit Profile</Button>
               </Link>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-0 border-y border-[var(--border)]">
               {profileFields.map(({ key, label }) => (
-                <div key={key} className="rounded-[24px] border border-white/8 bg-black/20 p-4">
-                  <p className="text-sm uppercase tracking-[0.14em] text-[var(--muted)]">{label}</p>
-                  <p className="mt-2 text-lg font-medium">
+                <div
+                  key={key}
+                  className="grid gap-2 border-b border-[var(--border)] py-4 last:border-b-0 md:grid-cols-[0.35fr_0.65fr] md:items-center"
+                >
+                  <p className="font-['JetBrains_Mono'] text-[0.72rem] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                    {label}
+                  </p>
+                  <p className="text-lg font-medium text-[var(--text)]">
                     {key === "weekly_hours" ? `${profile?.[key] ?? "-"} hours` : profile?.[key] || "Not set"}
                   </p>
                 </div>
@@ -51,13 +58,14 @@ export default function DashboardPage() {
         </Card>
 
         <div className="space-y-6">
-          <Card className="rounded-[32px] border-[rgba(70,178,255,0.18)] bg-[linear-gradient(180deg,rgba(8,17,30,0.95),rgba(5,9,16,0.95))]">
+          <Card>
             <CardContent className="p-8">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--secondary)]/16 text-[var(--secondary)]">
-                <Waves className="h-6 w-6" />
+              <p className="kicker">Connected Training Data</p>
+              <div className="mt-4 flex items-center gap-3 text-[var(--accent)]">
+                <Waves className="h-5 w-5" />
+                <span className="font-['Barlow_Condensed'] text-3xl font-bold uppercase leading-none">Strava</span>
               </div>
-              <h3 className="text-2xl font-semibold">Connect Strava for deeper insights</h3>
-              <p className="mt-3 text-[var(--muted)]">
+              <p className="mt-4 text-base leading-7 text-[var(--text-muted)]">
                 Phase 1 keeps the integration stubbed, but the app is ready to surface training-history-driven coaching later.
               </p>
               <Link to="/strava" className="mt-6 inline-flex">
@@ -69,11 +77,13 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-[32px]">
+          <Card>
             <CardContent className="p-8">
-              <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">Next step</p>
-              <h3 className="mt-2 text-2xl font-semibold">Open the coach chat</h3>
-              <p className="mt-3 text-[var(--muted)]">
+              <p className="kicker">Next Step</p>
+              <h3 className="mt-2 font-['Barlow_Condensed'] text-4xl font-bold uppercase leading-none text-[var(--accent)]">
+                Open the coach chat
+              </h3>
+              <p className="mt-4 text-base leading-7 text-[var(--text-muted)]">
                 Ask for a week outline, a race build recommendation, or help adjusting training around your constraints.
               </p>
               <Link to="/coach" className="mt-6 inline-flex">

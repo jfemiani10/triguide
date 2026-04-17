@@ -39,12 +39,16 @@ export default function LoginPage() {
   return (
     <PageShell>
       <div className="mx-auto max-w-md">
-        <Card className="rounded-[32px]">
+        <Card>
           <CardContent className="p-8">
             <div className="mb-8">
               <div className="pill mb-4">Log In</div>
-              <h2 className="text-3xl font-semibold tracking-tight">Back to your training cockpit</h2>
-              <p className="mt-3 text-[var(--muted)]">Pick up where you left off and continue the coaching conversation.</p>
+              <h2 className="font-['Barlow_Condensed'] text-5xl font-bold uppercase leading-none text-[var(--accent)]">
+                Back to your training block
+              </h2>
+              <p className="mt-4 text-base leading-7 text-[var(--text-muted)]">
+                Pick up where you left off and continue the coaching conversation.
+              </p>
             </div>
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
@@ -74,7 +78,7 @@ export default function LoginPage() {
                 {submitting ? "Checking credentials..." : "Log In"}
               </Button>
             </form>
-            <p className="mt-6 text-sm text-[var(--muted)]">
+            <p className="mt-6 text-sm text-[var(--text-muted)]">
               New here?{" "}
               <Link to="/signup" className="font-semibold text-[var(--primary)]">
                 Create an account

@@ -52,12 +52,14 @@ export default function ProfilePage() {
   return (
     <PageShell>
       <div className="grid gap-6 lg:grid-cols-[0.72fr_0.28fr]">
-        <Card className="rounded-[32px]">
+        <Card>
           <CardContent className="p-8">
             <div className="mb-8">
               <div className="pill mb-4">Profile</div>
-              <h2 className="text-3xl font-semibold tracking-tight">Edit your athlete details</h2>
-              <p className="mt-3 text-[var(--muted)]">
+              <h2 className="font-['Barlow_Condensed'] text-5xl font-bold uppercase leading-none text-[var(--accent)]">
+                Edit your athlete details
+              </h2>
+              <p className="mt-4 text-base leading-7 text-[var(--text-muted)]">
                 Keep your goal, limiter profile, and available hours current so TriGuide stays accurate.
               </p>
             </div>
@@ -112,7 +114,7 @@ export default function ProfilePage() {
                   value={form.injuries_limiters}
                   onChange={(event) => setForm((current) => ({ ...current, injuries_limiters: event.target.value }))}
                 />
-                <label className="mt-4 flex items-start gap-3 rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+                <label className="mt-4 flex items-start gap-3 rounded-[4px] border border-[var(--border)] bg-[var(--bg-alt)] px-4 py-3 text-sm text-[var(--text-muted)]">
                   <input
                     type="checkbox"
                     className="mt-1 h-4 w-4 accent-[var(--primary)]"
@@ -126,7 +128,7 @@ export default function ProfilePage() {
               </div>
               <div className="md:col-span-2">
                 <FieldError message={error} />
-                {success ? <p className="mt-2 text-sm text-emerald-300">{success}</p> : null}
+                {success ? <p className="mt-2 text-sm text-[var(--primary)]">{success}</p> : null}
               </div>
               <div className="md:col-span-2">
                 <Button disabled={submitting}>{submitting ? "Saving..." : "Save Profile"}</Button>
@@ -135,18 +137,20 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[32px]">
+        <Card>
           <CardContent className="p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">Account</p>
-            <h3 className="mt-3 text-2xl font-semibold">{user?.name}</h3>
-            <p className="mt-1 text-[var(--muted)]">{user?.email}</p>
-            <div className="mt-6 rounded-[24px] border border-white/8 bg-black/20 p-4">
-              <p className="text-sm uppercase tracking-[0.14em] text-[var(--muted)]">Messages remaining</p>
-              <p className="mt-2 text-3xl font-semibold">{user?.demo_messages_remaining ?? 0}</p>
+            <p className="kicker">Account</p>
+            <h3 className="mt-3 font-['Barlow_Condensed'] text-4xl font-bold uppercase leading-none text-[var(--accent)]">
+              {user?.name}
+            </h3>
+            <p className="mt-2 text-[var(--text-muted)]">{user?.email}</p>
+            <div className="mt-6 border-t border-[var(--border)] pt-4">
+              <p className="metric-value">{user?.demo_messages_remaining ?? 0}</p>
+              <p className="metric-label mt-2">Messages Remaining</p>
             </div>
             <Link
               to="/data"
-              className="mt-4 inline-flex items-center text-sm text-[var(--secondary)] transition hover:text-white"
+              className="mt-5 inline-flex items-center text-sm text-[var(--primary)] transition hover:text-[var(--primary-dark)]"
             >
               <ShieldCheck className="mr-2 h-4 w-4" />
               Manage data and privacy

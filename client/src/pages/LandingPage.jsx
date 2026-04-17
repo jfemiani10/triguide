@@ -1,77 +1,77 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Gauge, HeartPulse, TimerReset } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { PageShell } from "../components/ui/page-shell";
 import { Button } from "../components/ui/button";
-import { Card, CardContent } from "../components/ui/card";
 
-const highlights = [
-  {
-    title: "Profile-aware coaching",
-    copy: "TriGuide adapts recommendations to your race goal, available training time, and limiter profile.",
-    icon: HeartPulse,
-  },
-  {
-    title: "Periodized guidance",
-    copy: "Every chat response is framed around triathlon-specific concepts like Z2 loading, brick work, and race-pace control.",
-    icon: TimerReset,
-  },
-  {
-    title: "Built for serious athletes",
-    copy: "Dark, performance-first UX designed for athletes who care about specificity, not motivational fluff.",
-    icon: Gauge,
-  },
+const metrics = [
+  { value: "3", label: "Disciplines" },
+  { value: "1", label: "Personalized Plan" },
+  { value: "24/7", label: "Real Activity Data" },
 ];
 
 export default function LandingPage() {
   return (
     <PageShell>
-      <section className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-        <div className="panel grid-pattern rounded-[40px] p-8 md:p-12">
-          <div className="pill mb-5">Phase 1 Coaching Platform</div>
-          <h2 className="section-title mb-6 max-w-3xl font-semibold">
-            Train for your next triathlon with an AI coach that speaks your language.
-          </h2>
-          <p className="mb-8 max-w-2xl text-lg leading-8 text-[var(--muted)]">
-            TriGuide helps you turn a race goal into structured coaching conversations. Capture your athlete profile,
-            get direct feedback, and keep your plan focused even before your training data is connected.
-          </p>
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <Link to="/signup">
-              <Button className="w-full sm:w-auto">
-                Create Account
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/login">
-              <Button variant="secondary" className="w-full sm:w-auto">
-                Log In
-              </Button>
-            </Link>
+      <section className="grid gap-14">
+        <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
+          <div className="space-y-6">
+            <div className="pill w-fit">Editorial Coaching Platform</div>
+            <h1 className="font-['Barlow_Condensed'] text-[clamp(4rem,9vw,6.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.03em] text-[var(--accent)]">
+              Your AI
+              <br />
+              Triathlon Coach
+            </h1>
+            <p className="max-w-2xl text-lg leading-8 text-[var(--text-muted)]">
+              TriGuide blends athlete profiling, training context, and activity history into coaching software that feels
+              built for the season ahead, not for a demo day.
+            </p>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Link to="/signup">
+                <Button className="w-full sm:w-auto">
+                  Start Training
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button variant="secondary" className="w-full sm:w-auto">
+                  Log In
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
 
-        <Card className="rounded-[40px] bg-[linear-gradient(180deg,rgba(11,20,34,0.96),rgba(5,10,18,0.98))]">
-          <CardContent className="space-y-6 p-8">
-            <div className="rounded-[28px] border border-white/8 bg-white/4 p-5">
-              <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">Coach Snapshot</p>
-              <p className="mt-3 text-xl font-medium leading-8 text-slate-100">
-                “You’ve got 7 hours a week and a 70.3 on the calendar. Let’s stabilize your run durability before we
-                layer in more threshold bike work.”
+          <div className="grid gap-6 border-l-0 border-[var(--border)] pt-0 lg:border-l lg:pl-8">
+            <div>
+              <p className="kicker">Built For Race Season</p>
+              <p className="mt-3 text-base leading-7 text-[var(--text-muted)]">
+                Structured athlete intake, practical coaching chat, and Strava-backed context in one place.
               </p>
             </div>
-            <div className="grid gap-4">
-              {highlights.map(({ title, copy, icon: Icon }) => (
-                <div key={title} className="rounded-[24px] border border-white/8 bg-black/20 p-5">
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--secondary)]/14 text-[var(--secondary)]">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="text-lg font-semibold">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{copy}</p>
+            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              {metrics.map((metric) => (
+                <div key={metric.label} className="border-t border-[var(--border)] pt-4">
+                  <p className="metric-value">{metric.value}</p>
+                  <p className="metric-label mt-2">{metric.label}</p>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        <div className="grid gap-6 border-t border-[var(--border)] pt-10 lg:grid-cols-3">
+          <div>
+            <p className="pill w-fit">Athlete Profile</p>
+            <h2 className="mt-4 font-['Barlow_Condensed'] text-4xl font-bold uppercase leading-none text-[var(--accent)]">
+              Training Context First
+            </h2>
+          </div>
+          <p className="text-base leading-7 text-[var(--text-muted)]">
+            Build around race distance, weekly hours, and the discipline that needs the most work before race day.
+          </p>
+          <p className="text-base leading-7 text-[var(--text-muted)]">
+            Keep every recommendation grounded in the realities of your schedule, durability, and recent work.
+          </p>
+        </div>
       </section>
     </PageShell>
   );

@@ -129,28 +129,30 @@ export default function StravaPage() {
   return (
     <PageShell>
       <div className="mx-auto max-w-5xl space-y-6">
-        <Card className="rounded-[36px] border-[rgba(70,211,161,0.18)] bg-[linear-gradient(180deg,rgba(8,17,30,0.96),rgba(5,9,16,0.98))]">
+        <Card>
           <CardContent className="p-8 md:p-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
               <div className="max-w-2xl">
                 <div className="pill mb-4">Strava Integration</div>
-                <h2 className="text-4xl font-semibold tracking-tight">Connect your training history to TriGuide</h2>
-                <p className="mt-4 text-lg leading-8 text-[var(--muted)]">
+                <h2 className="font-['Barlow_Condensed'] text-5xl font-bold uppercase leading-none text-[var(--accent)]">
+                  Connect your training history to TriGuide
+                </h2>
+                <p className="mt-4 text-lg leading-8 text-[var(--text-muted)]">
                   Pull your recent Strava activities into TriGuide so coaching can lean on real training load instead of
                   profile details alone.
                 </p>
               </div>
-              <div className="flex h-16 w-16 items-center justify-center rounded-[24px] bg-[var(--primary)]/14 text-[var(--primary)]">
+              <div className="flex h-16 w-16 items-center justify-center border border-[var(--border)] bg-[var(--bg-alt)] text-[var(--primary)]">
                 <Cable className="h-8 w-8" />
               </div>
             </div>
 
             {flashMessage ? (
               <div
-                className={`mt-6 rounded-3xl border px-5 py-4 text-sm ${
+                className={`mt-6 rounded-[4px] border px-5 py-4 text-sm ${
                   flashMessage.tone === "success"
-                    ? "border-[rgba(70,211,161,0.28)] bg-[rgba(70,211,161,0.08)] text-[#b4f4db]"
-                    : "border-[rgba(255,107,107,0.28)] bg-[rgba(255,107,107,0.08)] text-[#ffd1d1]"
+                    ? "border-[var(--border)] bg-[var(--bg-alt)] text-[var(--text)]"
+                    : "border-[var(--primary)] bg-[#fdf0ee] text-[var(--text)]"
                 }`}
               >
                 {flashMessage.text}
@@ -158,7 +160,7 @@ export default function StravaPage() {
             ) : null}
 
             {error ? (
-              <div className="mt-6 rounded-3xl border border-[rgba(255,107,107,0.28)] bg-[rgba(255,107,107,0.08)] px-5 py-4 text-sm text-[#ffd1d1]">
+              <div className="mt-6 rounded-[4px] border border-[var(--primary)] bg-[#fdf0ee] px-5 py-4 text-sm text-[var(--text)]">
                 {error}
               </div>
             ) : null}
@@ -189,24 +191,26 @@ export default function StravaPage() {
         </Card>
 
         <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <Card className="rounded-[32px]">
+          <Card>
             <CardContent className="space-y-5 p-6">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--secondary)]/14 text-[var(--secondary)]">
+                <div className="flex h-11 w-11 items-center justify-center border border-[var(--border)] bg-[var(--bg-alt)] text-[var(--accent)]">
                   <Activity className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">Connection Status</p>
-                  <h3 className="text-2xl font-semibold">{connection ? "Connected" : "Not connected"}</h3>
+                  <p className="kicker">Connection Status</p>
+                  <h3 className="font-['Barlow_Condensed'] text-4xl font-bold uppercase leading-none text-[var(--accent)]">
+                    {connection ? "Connected" : "Not connected"}
+                  </h3>
                 </div>
               </div>
 
               {loading ? (
-                <p className="text-sm text-[var(--muted)]">Loading Strava status...</p>
+                <p className="text-sm text-[var(--text-muted)]">Loading Strava status...</p>
               ) : connection ? (
-                <div className="space-y-4 text-sm text-[var(--muted)]">
-                  <div className="rounded-[24px] border border-white/8 bg-white/4 p-4">
-                    <p className="font-semibold text-white">{connection.athlete_name || connection.athlete_username || "Connected athlete"}</p>
+                <div className="space-y-4 text-sm text-[var(--text-muted)]">
+                  <div className="rounded-[4px] border border-[var(--border)] bg-[var(--bg-alt)] p-4">
+                    <p className="font-semibold text-[var(--text)]">{connection.athlete_name || connection.athlete_username || "Connected athlete"}</p>
                     <p className="mt-1">
                       {[connection.city, connection.state, connection.country].filter(Boolean).join(", ") || "Location unavailable"}
                     </p>
@@ -216,41 +220,41 @@ export default function StravaPage() {
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="rounded-[24px] border border-white/8 bg-black/20 p-4">
-                      <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted)]">Recent activities stored</p>
-                      <p className="mt-2 text-3xl font-semibold text-white">{status?.activity_count ?? 0}</p>
+                    <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4">
+                      <p className="metric-label">Recent activities stored</p>
+                      <p className="metric-value mt-2">{status?.activity_count ?? 0}</p>
                     </div>
-                    <div className="rounded-[24px] border border-white/8 bg-black/20 p-4">
-                      <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted)]">Last sync</p>
-                      <p className="mt-2 text-lg font-semibold text-white">
+                    <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4">
+                      <p className="metric-label">Last sync</p>
+                      <p className="mt-2 text-lg font-semibold text-[var(--text)]">
                         {status?.recent_activities?.[0]?.synced_at ? formatDate(status.recent_activities[0].synced_at) : "No sync yet"}
                       </p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <p className="text-sm leading-7 text-[var(--muted)]">
+                <p className="text-sm leading-7 text-[var(--text-muted)]">
                   Use the connect button above, authorize TriGuide in Strava, and you will land back here automatically.
                 </p>
               )}
             </CardContent>
           </Card>
 
-          <Card className="rounded-[32px]">
+          <Card>
             <CardContent className="p-6">
-              <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">Latest Imported Workouts</p>
+              <p className="kicker">Latest Imported Workouts</p>
               <div className="mt-5 space-y-3">
                 {loading ? (
-                  <p className="text-sm text-[var(--muted)]">Loading recent activities...</p>
+                  <p className="text-sm text-[var(--text-muted)]">Loading recent activities...</p>
                 ) : status?.recent_activities?.length ? (
                   status.recent_activities.map((activity) => (
-                    <div key={activity.id} className="rounded-[24px] border border-white/8 bg-black/20 p-4">
+                    <div key={activity.id} className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
-                          <p className="font-semibold text-white">{activity.sport_type || "Workout"}</p>
-                          <p className="mt-1 text-sm text-[var(--muted)]">{formatDate(activity.start_date)}</p>
+                          <p className="font-semibold text-[var(--text)]">{activity.sport_type || "Workout"}</p>
+                          <p className="mt-1 text-sm text-[var(--text-muted)]">{formatDate(activity.start_date)}</p>
                         </div>
-                        <div className="text-right text-sm text-[var(--muted)]">
+                        <div className="text-right text-sm text-[var(--text-muted)]">
                           <p>{formatDistance(activity.distance_meters)}</p>
                           <p className="mt-1">{activity.moving_time_seconds ? `${Math.round(activity.moving_time_seconds / 60)} min moving` : "Time unavailable"}</p>
                         </div>
@@ -258,7 +262,7 @@ export default function StravaPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm leading-7 text-[var(--muted)]">
+                  <p className="text-sm leading-7 text-[var(--text-muted)]">
                     No Strava activities have been imported yet. After connecting, use “Sync Activities” to pull the latest workouts.
                   </p>
                 )}

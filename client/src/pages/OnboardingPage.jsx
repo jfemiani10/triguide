@@ -89,25 +89,33 @@ export default function OnboardingPage() {
   return (
     <PageShell>
       <div className="mx-auto max-w-4xl">
-        <Card className="rounded-[36px]">
+        <Card>
           <CardContent className="p-8 md:p-10">
             <div className="mb-8">
               <div className="mb-4 flex items-center justify-between gap-4">
                 <div>
-                  <div className="pill mb-3">Athlete Onboarding</div>
-                  <h2 className="text-3xl font-semibold tracking-tight">Build your athlete profile</h2>
-                  <p className="mt-3 max-w-2xl text-[var(--muted)]">
+                  <p className="font-['JetBrains_Mono'] text-[0.75rem] uppercase tracking-[0.12em] text-[var(--primary)]">
+                    Step 2 of 3
+                  </p>
+                  <h2 className="mt-3 font-['Barlow_Condensed'] text-5xl font-bold uppercase leading-none text-[var(--accent)]">
+                    Build your athlete profile
+                  </h2>
+                  <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--text-muted)]">
                     TriGuide uses this information to personalize every recommendation. Complete all required fields to
                     unlock your dashboard and coaching chat.
                   </p>
                 </div>
-                <div className="hidden rounded-[24px] border border-white/8 bg-black/20 px-5 py-4 text-right md:block">
-                  <p className="text-sm uppercase tracking-[0.16em] text-[var(--muted)]">Athlete</p>
-                  <p className="mt-1 text-lg font-semibold">{user?.name}</p>
+                <div className="hidden border-l border-[var(--border)] pl-6 text-right md:block">
+                  <p className="font-['JetBrains_Mono'] text-[0.72rem] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                    Athlete
+                  </p>
+                  <p className="mt-1 text-lg font-semibold text-[var(--text)]">{user?.name}</p>
                 </div>
               </div>
               <Progress value={completion} />
-              <p className="mt-3 text-sm text-[var(--muted)]">{completion}% complete</p>
+              <p className="mt-3 font-['JetBrains_Mono'] text-[0.72rem] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                {completion}% complete
+              </p>
             </div>
 
             <form className="grid gap-5 md:grid-cols-2" onSubmit={handleSubmit}>
@@ -204,7 +212,7 @@ export default function OnboardingPage() {
                   value={form.injuries_limiters || ""}
                   onChange={(event) => setForm((current) => ({ ...current, injuries_limiters: event.target.value }))}
                 />
-                <label className="mt-4 flex items-start gap-3 rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+                <label className="mt-4 flex items-start gap-3 rounded-[4px] border border-[var(--border)] bg-[var(--bg-alt)] px-4 py-3 text-sm text-[var(--text-muted)]">
                   <input
                     type="checkbox"
                     className="mt-1 h-4 w-4 accent-[var(--primary)]"

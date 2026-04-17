@@ -13,7 +13,7 @@ export function SelectTrigger({ className, children, ...props }) {
     <SelectPrimitive.Trigger className={cn("select-trigger flex items-center justify-between", className)} {...props}>
       {children}
       <SelectPrimitive.Icon>
-        <ChevronDown className="h-4 w-4 text-[var(--muted)]" />
+        <ChevronDown className="h-4 w-4 text-[var(--text-muted)]" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -22,7 +22,7 @@ export function SelectTrigger({ className, children, ...props }) {
 export function SelectContent({ children }) {
   return (
     <SelectPrimitive.Portal>
-      <SelectPrimitive.Content className="z-50 overflow-hidden rounded-2xl border border-white/10 bg-slate-950 text-white shadow-2xl">
+      <SelectPrimitive.Content className="z-50 overflow-hidden rounded-[8px] border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
         <SelectPrimitive.Viewport className="p-1">{children}</SelectPrimitive.Viewport>
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
@@ -33,7 +33,7 @@ export function SelectItem({ className, children, ...props }) {
   return (
     <SelectPrimitive.Item
       className={cn(
-        "relative flex cursor-default select-none items-center rounded-xl py-2 pl-9 pr-3 text-sm outline-none data-[highlighted]:bg-white/10",
+        "relative flex cursor-default select-none items-center rounded-[4px] py-2 pl-9 pr-3 text-sm outline-none data-[highlighted]:bg-[var(--bg-alt)] data-[highlighted]:text-[var(--text)]",
         className,
       )}
       {...props}
