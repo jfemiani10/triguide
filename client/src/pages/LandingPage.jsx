@@ -23,7 +23,7 @@ export default function LandingPage() {
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-[var(--text-muted)]">
               TriGuide blends athlete profiling, training context, and activity history into coaching software that feels
-              built for the season ahead, not for a demo day.
+              built for athletes who want clear, practical coaching around the full race season.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link to="/signup">

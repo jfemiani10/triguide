@@ -141,6 +141,9 @@ export default function StravaPage() {
                   Pull your recent Strava activities into TriGuide so coaching can lean on real training load instead of
                   profile details alone.
                 </p>
+                <p className="mt-4 font-['JetBrains_Mono'] text-[0.72rem] uppercase tracking-[0.12em] text-[var(--primary)]">
+                  Note: Strava connection is not fully set up yet and may still be unreliable.
+                </p>
               </div>
               <div className="flex h-16 w-16 items-center justify-center border border-[var(--border)] bg-[var(--bg-alt)] text-[var(--primary)]">
                 <Cable className="h-8 w-8" />

@@ -23,6 +23,15 @@ export function PageShell({ children }) {
     setTheme((current) => (current === "dark" ? "light" : "dark"));
   }
 
+  function navLinkClassName({ isActive }) {
+    return [
+      "rounded px-3 py-2 transition",
+      isActive
+        ? "bg-[var(--primary)] text-white"
+        : "text-[var(--text-muted)] hover:text-[var(--primary)]",
+    ].join(" ");
+  }
+
   return (
     <div className="app-shell">
       <header className="sticky top-0 z-30 mb-10 w-full border-b border-[var(--border)] bg-[var(--surface)]">
@@ -69,16 +78,16 @@ export function PageShell({ children }) {
               <nav className="flex flex-wrap items-center gap-1 text-sm">
                 {isAuthenticated ? (
                   <>
-                    <NavLink to="/dashboard" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                    <NavLink to="/dashboard" className={navLinkClassName}>
                       Dashboard
                     </NavLink>
-                    <NavLink to="/coach" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                    <NavLink to="/coach" className={navLinkClassName}>
                       Coach
                     </NavLink>
-                    <NavLink to="/profile" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                    <NavLink to="/profile" className={navLinkClassName}>
                       Profile
                     </NavLink>
-                    <NavLink to="/data" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                    <NavLink to="/data" className={navLinkClassName}>
                       Data & Privacy
                     </NavLink>
                     <Button variant="ghost" onClick={logout} className="px-3 py-2">
@@ -87,7 +96,7 @@ export function PageShell({ children }) {
                   </>
                 ) : (
                   <>
-                    <NavLink to="/login" className="rounded px-3 py-2 text-[var(--text-muted)] hover:text-[var(--primary)]">
+                    <NavLink to="/login" className={navLinkClassName}>
                       Log In
                     </NavLink>
                     <Link to="/signup">
