@@ -38,6 +38,23 @@ export default function LandingPage() {
                 </Button>
               </Link>
             </div>
+
+            <div className="grid gap-6 border-t border-[var(--border)] pt-10 lg:grid-cols-[0.9fr_1.1fr]">
+              <div>
+                <p className="pill w-fit">Athlete Profile</p>
+                <h2 className="mt-4 font-['Barlow_Condensed'] text-4xl font-bold uppercase leading-none text-[var(--accent)]">
+                  Training Context First
+                </h2>
+              </div>
+              <div className="space-y-4">
+                <p className="text-base leading-7 text-[var(--text-muted)]">
+                  Build around race distance, weekly hours, and the discipline that needs the most work before race day.
+                </p>
+                <p className="text-base leading-7 text-[var(--text-muted)]">
+                  Keep every recommendation grounded in the realities of your schedule, durability, and recent work.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="relative lg:pl-4">
@@ -67,21 +84,6 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="grid gap-6 border-t border-[var(--border)] pt-10 lg:grid-cols-3">
-          <div>
-            <p className="pill w-fit">Athlete Profile</p>
-            <h2 className="mt-4 font-['Barlow_Condensed'] text-4xl font-bold uppercase leading-none text-[var(--accent)]">
-              Training Context First
-            </h2>
-          </div>
-          <p className="text-base leading-7 text-[var(--text-muted)]">
-            Build around race distance, weekly hours, and the discipline that needs the most work before race day.
-          </p>
-          <p className="text-base leading-7 text-[var(--text-muted)]">
-            Keep every recommendation grounded in the realities of your schedule, durability, and recent work.
-          </p>
         </div>
       </section>
     </PageShell>
