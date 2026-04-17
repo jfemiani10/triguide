@@ -27,7 +27,10 @@ router.get("/export", async (request, response) => {
     .select({
       goal: athleteProfiles.goal,
       target_race: athleteProfiles.target_race,
+      race_date: athleteProfiles.race_date,
       race_distance: athleteProfiles.race_distance,
+      goal_finish_time: athleteProfiles.goal_finish_time,
+      goal_finish_time_undetermined: athleteProfiles.goal_finish_time_undetermined,
       experience_level: athleteProfiles.experience_level,
       weakest_discipline: athleteProfiles.weakest_discipline,
       weekly_hours: athleteProfiles.weekly_hours,

@@ -25,6 +25,12 @@ function validateProfileInput(payload) {
     return "Health data consent is required if you share injuries or physical limiters";
   }
 
+  const goalFinishTime = String(payload?.goal_finish_time || "").trim();
+  const goalFinishTimeUndetermined = Boolean(payload?.goal_finish_time_undetermined);
+  if (!goalFinishTimeUndetermined && goalFinishTime && !/^\d{1,2}:\d{2}(:\d{2})?$/.test(goalFinishTime)) {
+    return "goal_finish_time must use HH:MM or HH:MM:SS format";
+  }
+
   return null;
 }
 
@@ -50,7 +56,10 @@ async function upsertOnboarding(request, response) {
     user_id: request.user.id,
     goal: request.body.goal.trim(),
     target_race: request.body.target_race?.trim() || `${request.body.race_distance.trim()} goal race`,
+    race_date: request.body.race_date?.trim() || null,
     race_distance: request.body.race_distance.trim(),
+    goal_finish_time: request.body.goal_finish_time_undetermined ? null : request.body.goal_finish_time?.trim() || null,
+    goal_finish_time_undetermined: Boolean(request.body.goal_finish_time_undetermined),
     experience_level: request.body.experience_level.trim(),
     weakest_discipline: request.body.weakest_discipline.trim(),
     weekly_hours: Number(request.body.weekly_hours),
@@ -108,8 +117,11 @@ router.put("/profile", async (request, response) => {
     .update(athleteProfiles)
     .set({
       goal: request.body.goal.trim(),
-      target_race: `${request.body.race_distance.trim()} goal race`,
+      target_race: request.body.target_race?.trim() || `${request.body.race_distance.trim()} goal race`,
+      race_date: request.body.race_date?.trim() || null,
       race_distance: request.body.race_distance.trim(),
+      goal_finish_time: request.body.goal_finish_time_undetermined ? null : request.body.goal_finish_time?.trim() || null,
+      goal_finish_time_undetermined: Boolean(request.body.goal_finish_time_undetermined),
       experience_level: request.body.experience_level.trim(),
       weakest_discipline: request.body.weakest_discipline.trim(),
       weekly_hours: Number(request.body.weekly_hours),

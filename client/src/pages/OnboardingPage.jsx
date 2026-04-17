@@ -14,7 +14,11 @@ import { useAuth } from "../hooks/useAuth";
 
 const defaultForm = {
   goal: "",
+  target_race: "",
+  race_date: "",
   race_distance: "",
+  goal_finish_time: "",
+  goal_finish_time_undetermined: false,
   experience_level: "",
   weakest_discipline: "",
   weekly_hours: 6,
@@ -55,7 +59,7 @@ export default function OnboardingPage() {
     load();
   }, [profile]);
 
-  const requiredKeys = ["goal", "race_distance", "experience_level", "weakest_discipline", "weekly_hours"];
+  const requiredKeys = ["goal", "target_race", "race_distance", "experience_level", "weakest_discipline", "weekly_hours"];
   const filled = requiredKeys.filter((key) => String(form[key] || "").trim()).length;
   const completion = Math.round((filled / requiredKeys.length) * 100);
 
@@ -134,6 +138,17 @@ export default function OnboardingPage() {
               </div>
 
               <div>
+                <Label htmlFor="target_race">Target race</Label>
+                <Input
+                  id="target_race"
+                  placeholder="IRONMAN 70.3 Ohio"
+                  value={form.target_race}
+                  onChange={(event) => setForm((current) => ({ ...current, target_race: event.target.value }))}
+                  required
+                />
+              </div>
+
+              <div>
                 <Label>Target race distance</Label>
                 <Select
                   value={form.race_distance}
@@ -154,6 +169,43 @@ export default function OnboardingPage() {
                     <SelectItem value="Full Ironman">Full Ironman</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="race_date">Race date</Label>
+                <Input
+                  id="race_date"
+                  type="date"
+                  value={form.race_date || ""}
+                  onChange={(event) => setForm((current) => ({ ...current, race_date: event.target.value }))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="goal_finish_time">Goal finish time</Label>
+                <Input
+                  id="goal_finish_time"
+                  type="time"
+                  step="1"
+                  value={form.goal_finish_time_undetermined ? "" : form.goal_finish_time || ""}
+                  onChange={(event) => setForm((current) => ({ ...current, goal_finish_time: event.target.value }))}
+                  disabled={Boolean(form.goal_finish_time_undetermined)}
+                />
+                <label className="mt-3 flex items-center gap-3 text-sm text-[var(--text-muted)]">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-[var(--primary)]"
+                    checked={Boolean(form.goal_finish_time_undetermined)}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        goal_finish_time_undetermined: event.target.checked,
+                        goal_finish_time: event.target.checked ? "" : current.goal_finish_time,
+                      }))
+                    }
+                  />
+                  <span>Undetermined time</span>
+                </label>
               </div>
 
               <div>

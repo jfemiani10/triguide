@@ -8,7 +8,9 @@ import { useAuth } from "../hooks/useAuth";
 const profileFields = [
   { key: "goal", label: "Goal" },
   { key: "target_race", label: "Target race" },
+  { key: "race_date", label: "Race date" },
   { key: "race_distance", label: "Distance" },
+  { key: "goal_finish_time", label: "Goal time" },
   { key: "experience_level", label: "Experience" },
   { key: "weakest_discipline", label: "Weakest discipline" },
   { key: "weekly_hours", label: "Hours/week" },
@@ -49,7 +51,13 @@ export default function DashboardPage() {
                     {label}
                   </p>
                   <p className="text-lg font-medium text-[var(--text)]">
-                    {key === "weekly_hours" ? `${profile?.[key] ?? "-"} hours` : profile?.[key] || "Not set"}
+                    {key === "weekly_hours"
+                      ? `${profile?.[key] ?? "-"} hours`
+                      : key === "goal_finish_time"
+                        ? profile?.goal_finish_time_undetermined
+                          ? "Undetermined"
+                          : profile?.goal_finish_time || "Not set"
+                        : profile?.[key] || "Not set"}
                   </p>
                 </div>
               ))}
