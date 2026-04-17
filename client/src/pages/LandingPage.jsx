@@ -13,7 +13,7 @@ export default function LandingPage() {
   return (
     <PageShell>
       <section className="grid gap-14">
-        <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
+        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div className="space-y-6">
             <div className="pill w-fit">Editorial Coaching Platform</div>
             <h1 className="font-['Barlow_Condensed'] text-[clamp(4rem,9vw,6.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.03em] text-[var(--accent)]">
@@ -40,20 +40,31 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="grid gap-6 border-l-0 border-[var(--border)] pt-0 lg:border-l lg:pl-8">
-            <div>
-              <p className="kicker">Built For Race Season</p>
-              <p className="mt-3 text-base leading-7 text-[var(--text-muted)]">
-                Structured athlete intake, practical coaching chat, and Strava-backed context in one place.
-              </p>
+          <div className="relative lg:pl-4">
+            <div className="relative overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-alt)]">
+              <img
+                src="/hero-cyclist.jpeg"
+                alt="Time trial cyclist in aerodynamic position"
+                className="h-[540px] w-full object-cover object-center"
+              />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_70%,transparent)] to-transparent" />
             </div>
-            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              {metrics.map((metric) => (
-                <div key={metric.label} className="border-t border-[var(--border)] pt-4">
-                  <p className="metric-value">{metric.value}</p>
-                  <p className="metric-label mt-2">{metric.label}</p>
-                </div>
-              ))}
+
+            <div className="relative z-10 -mt-28 ml-auto w-full max-w-[88%] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.14)] md:p-8">
+              <div>
+                <p className="kicker">Built For Race Season</p>
+                <p className="mt-3 text-base leading-7 text-[var(--text-muted)]">
+                  Structured athlete intake, practical coaching chat, and Strava-backed context in one place.
+                </p>
+              </div>
+              <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                {metrics.map((metric) => (
+                  <div key={metric.label} className="border-t border-[var(--border)] pt-4">
+                    <p className="metric-value">{metric.value}</p>
+                    <p className="metric-label mt-2">{metric.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
