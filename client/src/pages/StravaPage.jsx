@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Activity, Cable, RefreshCw, ShieldCheck, Unplug } from "lucide-react";
+import { Activity, Cable, RefreshCw, Unplug } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../components/ui/page-shell";
 import { Card, CardContent } from "../components/ui/card";
@@ -169,10 +169,25 @@ export default function StravaPage() {
             ) : null}
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button onClick={handleConnect} disabled={busyAction === "connect"}>
-                <ShieldCheck className="mr-2 h-4 w-4" />
-                {connection ? "Reconnect Strava" : "Connect Strava"}
-              </Button>
+              {connection ? (
+                <Button onClick={handleConnect} disabled={busyAction === "connect"}>
+                  {busyAction === "connect" ? "Reconnecting..." : "Reconnect Strava"}
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleConnect}
+                  disabled={busyAction === "connect"}
+                  className="rounded-[4px] transition disabled:cursor-not-allowed disabled:opacity-60"
+                  aria-label="Connect with Strava"
+                >
+                  <img
+                    src="/btn_strava_connect_with_orange.png"
+                    alt="Connect with Strava"
+                    className="h-12 w-auto"
+                  />
+                </button>
+              )}
               <Button
                 variant="secondary"
                 onClick={() => runMutation("/strava/sync", { method: "POST" }, "sync")}
@@ -190,6 +205,11 @@ export default function StravaPage() {
                 {busyAction === "disconnect" ? "Disconnecting..." : "Disconnect"}
               </Button>
             </div>
+            {!connection && busyAction === "connect" ? (
+              <p className="mt-3 font-['JetBrains_Mono'] text-[0.72rem] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                Opening Strava authorization...
+              </p>
+            ) : null}
           </CardContent>
         </Card>
 
