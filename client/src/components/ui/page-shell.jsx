@@ -8,10 +8,10 @@ export function PageShell({ children }) {
   const { isAuthenticated, logout } = useAuth();
   const [theme, setTheme] = useState(() => {
     if (typeof window === "undefined") {
-      return "light";
+      return "dark";
     }
 
-    return localStorage.getItem("triguide-theme") || "light";
+    return localStorage.getItem("triguide-theme") || "dark";
   });
 
   useEffect(() => {
