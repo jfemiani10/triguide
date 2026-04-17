@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, lt, sql } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { activities, stravaConnections, users } from "../db/schema.js";
 import { requireAuth } from "../middleware/auth.js";
@@ -18,6 +18,7 @@ import {
 } from "../services/strava.js";
 
 const router = Router();
+const STRAVA_CACHE_RETENTION_DAYS = 7;
 
 router.get("/__probe_public", (_request, response) => {
   return response.json({ ok: true, route: "strava-public-probe-v1" });
@@ -117,7 +118,35 @@ async function syncActivitiesForUser(userId) {
   };
 }
 
+async function cleanupExpiredActivities(userId) {
+  const cutoff = new Date(Date.now() - STRAVA_CACHE_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  await db.delete(activities).where(and(eq(activities.user_id, userId), lt(activities.synced_at, cutoff)));
+}
+
+function buildPrefillDraft(activity) {
+  const sport = activity.sport_type || "Workout";
+  const dateLabel = activity.start_date ? new Date(activity.start_date).toISOString().slice(0, 10) : null;
+  const distanceLabel = activity.distance_meters ? `${(activity.distance_meters / 1000).toFixed(1)} km` : null;
+  const durationMinutes = activity.moving_time_seconds ? Math.round(activity.moving_time_seconds / 60) : null;
+  const durationLabel = durationMinutes ? `${durationMinutes} minutes` : null;
+  const metrics = [distanceLabel, durationLabel].filter(Boolean).join(" and ");
+
+  return {
+    source: "strava_prefill",
+    sport,
+    session_date: dateLabel,
+    title: `${sport} session from Strava`,
+    summary: metrics
+      ? `${sport} session${dateLabel ? ` on ${dateLabel}` : ""} covering ${metrics}. Add how it felt, what the effort was, and any context you want TriGuide to use in future coaching.`
+      : `${sport} session${dateLabel ? ` on ${dateLabel}` : ""}. Add how it felt, what the effort was, and any context you want TriGuide to use in future coaching.`,
+    distance_meters: activity.distance_meters,
+    moving_time_seconds: activity.moving_time_seconds,
+  };
+}
+
 async function buildStatusResponse(user) {
+  await cleanupExpiredActivities(user.id);
+
   const connection = await getConnection(user.id);
   const [activitySummary] = await db
     .select({ count: sql`count(*)` })
@@ -208,6 +237,28 @@ router.post("/sync", async (request, response) => {
   } catch (error) {
     return response.status(400).json({ error: error.message || "Strava sync failed" });
   }
+});
+
+router.post("/activities/:id/prefill", async (request, response) => {
+  await cleanupExpiredActivities(request.user.id);
+
+  const activityId = Number(request.params.id);
+
+  if (!Number.isInteger(activityId) || activityId <= 0) {
+    return response.status(400).json({ error: "Invalid activity id" });
+  }
+
+  const [activity] = await db
+    .select()
+    .from(activities)
+    .where(and(eq(activities.id, activityId), eq(activities.user_id, request.user.id)))
+    .limit(1);
+
+  if (!activity) {
+    return response.status(404).json({ error: "Strava activity not found" });
+  }
+
+  return response.json({ draft: buildPrefillDraft(activity) });
 });
 
 router.delete("/connection", async (request, response) => {

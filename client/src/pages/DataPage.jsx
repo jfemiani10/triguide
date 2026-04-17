@@ -185,7 +185,7 @@ export default function DataPage() {
                 Download a full account export
               </h3>
               <p className="mt-4 leading-7 text-[var(--text-muted)]">
-                Export your profile, chat history, Strava connection details, and imported activities in JSON format.
+                Export your profile, chat history, saved coaching notes, Strava connection details, and imported activities in JSON format.
               </p>
               <div className="mt-6">
                 <Button onClick={handleExport} disabled={busyAction === "export"}>

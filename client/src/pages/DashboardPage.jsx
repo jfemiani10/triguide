@@ -66,7 +66,7 @@ export default function DashboardPage() {
                 <span className="font-['Barlow_Condensed'] text-3xl font-bold uppercase leading-none">Strava</span>
               </div>
               <p className="mt-4 text-base leading-7 text-[var(--text-muted)]">
-                Strava connection is available in TriGuide, but the integration is still being finalized and may not be fully reliable yet.
+                Strava connection is available in TriGuide for reference and note-taking, but the integration is still being finalized and may not be fully reliable yet.
               </p>
               <Link to="/strava" className="mt-6 inline-flex">
                 <Button variant="secondary">

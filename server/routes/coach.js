@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { db } from "../db/index.js";
-import { activities, athleteProfiles, chatMessages, stravaConnections, usageLog, users } from "../db/schema.js";
+import { athleteProfiles, chatMessages, coachingContextEntries, usageLog, users } from "../db/schema.js";
 import { requireAuth, requireOnboarding } from "../middleware/auth.js";
 import { createCoachResponse } from "../services/anthropic.js";
 import { serializeUser } from "./auth.js";
@@ -11,58 +11,47 @@ const MAX_PROMPT_CHARACTERS = 4000;
 
 function formatDuration(seconds) {
   if (!seconds) {
-    return "time unavailable";
+    return null;
   }
 
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.round((seconds % 3600) / 60);
 
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-
-  return `${minutes}m`;
+  return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 }
 
 function formatDistance(meters) {
   if (!meters) {
-    return "distance unavailable";
+    return null;
   }
 
   return `${(meters / 1000).toFixed(1)} km`;
 }
 
-function buildStravaContext(connection, recentActivities) {
-  if (!connection) {
-    return "This athlete has not connected Strava yet, so you have no workout history. Coach based on their profile and what they share in conversation.";
+function buildCoachingContext(notes) {
+  if (!notes.length) {
+    return "No saved coaching notes yet. Coach from the athlete profile and the current conversation, and ask for recent training details when needed.";
   }
 
-  const athleteName =
-    [connection.athlete_firstname, connection.athlete_lastname].filter(Boolean).join(" ") ||
-    connection.athlete_username ||
-    "Connected athlete";
+  const noteSummary = notes
+    .map((note) => {
+      const metadata = [
+        note.sport || null,
+        note.session_date ? `on ${note.session_date}` : null,
+        formatDistance(note.distance_meters),
+        formatDuration(note.moving_time_seconds),
+      ]
+        .filter(Boolean)
+        .join(", ");
 
-  if (!recentActivities.length) {
-    return `This athlete has connected Strava as ${athleteName}, but there are no imported activities yet. Use that connection status in your reasoning, but ask them to sync or describe their recent training if needed.`;
-  }
-
-  const activitySummary = recentActivities
-    .map((activity) => {
-      const parts = [
-        activity.sport_type || "Workout",
-        activity.start_date ? `on ${activity.start_date}` : null,
-        formatDistance(activity.distance_meters),
-        formatDuration(activity.moving_time_seconds),
-      ].filter(Boolean);
-
-      return `- ${parts.join(", ")}`;
+      return `- ${note.title}${metadata ? ` (${metadata})` : ""}: ${note.summary}`;
     })
     .join("\n");
 
-  return `This athlete has connected Strava as ${athleteName}. You have access to imported recent activity history, summarized below. Use it when it helps, but be honest about its limits because this is only a partial snapshot of training.\n\nRecent imported activities:\n${activitySummary}`;
+  return `Recent TriGuide coaching notes explicitly saved by the athlete:\n${noteSummary}`;
 }
 
-function buildSystemPrompt(profile, connection, recentActivities) {
+function buildSystemPrompt(profile, notes) {
   return `You are TriGuide, an expert triathlon coach trained in the principles of data-driven, periodized triathlon training - similar in philosophy to platforms like TriDot.
 
 Athlete profile:
@@ -73,7 +62,7 @@ Athlete profile:
 - Available training time: ${profile.weekly_hours} hours/week
 - Injuries/limiters: ${profile.injuries_limiters || "None reported"}
 
-${buildStravaContext(connection, recentActivities)}
+${buildCoachingContext(notes)}
 
 Ask smart clarifying questions before prescribing workouts. Be direct, specific, and motivating. Reference their goal race and timeline in your advice. Use proper triathlon coaching terminology: periodization, Z2, brick workouts, race-pace intervals, TSS.`;
 }
@@ -94,6 +83,76 @@ router.get("/history", async (request, response) => {
   return response.json({ conversation_history: history });
 });
 
+router.get("/context", async (request, response) => {
+  const notes = await db
+    .select()
+    .from(coachingContextEntries)
+    .where(eq(coachingContextEntries.user_id, request.user.id))
+    .orderBy(desc(coachingContextEntries.session_date), desc(coachingContextEntries.created_at), desc(coachingContextEntries.id));
+
+  return response.json({ notes });
+});
+
+router.post("/context", async (request, response) => {
+  const {
+    source = "manual",
+    sport = null,
+    session_date = null,
+    title,
+    summary,
+    distance_meters = null,
+    moving_time_seconds = null,
+  } = request.body || {};
+
+  if (source !== "manual" && source !== "strava_prefill") {
+    return response.status(400).json({ error: "source must be manual or strava_prefill" });
+  }
+
+  if (!String(title || "").trim()) {
+    return response.status(400).json({ error: "title is required" });
+  }
+
+  if (!String(summary || "").trim()) {
+    return response.status(400).json({ error: "summary is required" });
+  }
+
+  const [note] = await db
+    .insert(coachingContextEntries)
+    .values({
+      user_id: request.user.id,
+      source,
+      sport: sport ? String(sport).trim() : null,
+      session_date: session_date ? String(session_date).trim() : null,
+      title: String(title).trim(),
+      summary: String(summary).trim(),
+      distance_meters: distance_meters === null || distance_meters === "" ? null : Number(distance_meters),
+      moving_time_seconds:
+        moving_time_seconds === null || moving_time_seconds === "" ? null : Number(moving_time_seconds),
+    })
+    .returning();
+
+  return response.status(201).json({ note });
+});
+
+router.delete("/context/:id", async (request, response) => {
+  const noteId = Number(request.params.id);
+
+  if (!Number.isInteger(noteId) || noteId <= 0) {
+    return response.status(400).json({ error: "Invalid note id" });
+  }
+
+  const [deletedNote] = await db
+    .delete(coachingContextEntries)
+    .where(and(eq(coachingContextEntries.id, noteId), eq(coachingContextEntries.user_id, request.user.id)))
+    .returning();
+
+  if (!deletedNote) {
+    return response.status(404).json({ error: "Coaching note not found" });
+  }
+
+  return response.status(204).send();
+});
+
 router.post("/chat", async (request, response) => {
   const { message, conversation_history: conversationHistory = [] } = request.body || {};
 
@@ -112,17 +171,12 @@ router.post("/chat", async (request, response) => {
   }
 
   const [profile] = await db.select().from(athleteProfiles).where(eq(athleteProfiles.user_id, request.user.id)).limit(1);
-  const [connection] = await db
+  const notes = await db
     .select()
-    .from(stravaConnections)
-    .where(eq(stravaConnections.user_id, request.user.id))
-    .limit(1);
-  const recentActivities = await db
-    .select()
-    .from(activities)
-    .where(eq(activities.user_id, request.user.id))
-    .orderBy(desc(activities.start_date))
-    .limit(8);
+    .from(coachingContextEntries)
+    .where(eq(coachingContextEntries.user_id, request.user.id))
+    .orderBy(desc(coachingContextEntries.session_date), desc(coachingContextEntries.created_at), desc(coachingContextEntries.id))
+    .limit(6);
 
   if (!profile) {
     return response.status(400).json({ error: "Athlete profile not found" });
@@ -139,7 +193,7 @@ router.post("/chat", async (request, response) => {
 
   try {
     coachReply = await createCoachResponse({
-      systemPrompt: buildSystemPrompt(profile, connection || null, recentActivities),
+      systemPrompt: buildSystemPrompt(profile, notes),
       conversationHistory: conversation,
     });
   } catch (error) {

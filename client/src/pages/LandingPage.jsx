@@ -6,7 +6,7 @@ import { Button } from "../components/ui/button";
 const metrics = [
   { value: "3", label: "Disciplines" },
   { value: "1", label: "Personalized Plan" },
-  { value: "24/7", label: "Real Activity Data" },
+  { value: "1-TAP", label: "Coaching Notes" },
 ];
 
 export default function LandingPage() {
@@ -68,7 +68,7 @@ export default function LandingPage() {
               <div>
                 <p className="kicker">Built For Race Season</p>
                 <p className="mt-3 text-base leading-7 text-[var(--text-muted)]">
-                  Structured athlete intake, practical coaching chat, and Strava-backed context in one place.
+                  Structured athlete intake, practical coaching chat, and optional Strava sync in one place.
                 </p>
               </div>
               <div className="mt-6 grid gap-4 sm:grid-cols-3">

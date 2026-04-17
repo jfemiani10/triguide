@@ -47,6 +47,19 @@ export const usageLog = sqliteTable("usage_log", {
   created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });
 
+export const coachingContextEntries = sqliteTable("coaching_context_entries", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  user_id: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  source: text("source", { enum: ["manual", "strava_prefill"] }).notNull(),
+  sport: text("sport"),
+  session_date: text("session_date"),
+  title: text("title").notNull(),
+  summary: text("summary").notNull(),
+  distance_meters: integer("distance_meters"),
+  moving_time_seconds: integer("moving_time_seconds"),
+  created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
 export const stravaConnections = sqliteTable("strava_connections", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   user_id: integer("user_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),

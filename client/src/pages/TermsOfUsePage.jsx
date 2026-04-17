@@ -16,7 +16,7 @@ const sections = [
     id: "service",
     title: "2. Description of the Service",
     paragraphs: [
-      "TriGuide is a triathlon coaching and training guidance application that provides athlete profile management, AI-generated coaching responses, and optional Strava-connected training context.",
+      "TriGuide is a triathlon coaching and training guidance application that provides athlete profile management, AI-generated coaching responses, optional Strava-connected activity display, and user-saved coaching notes.",
       "We may modify, suspend, or discontinue all or part of the Services at any time.",
     ],
   },
@@ -49,6 +49,7 @@ const sections = [
     title: "6. Strava and Third-Party Services",
     paragraphs: [
       "If you connect Strava or use other third-party integrations, you authorize TriGuide to access and process the data you permit through those services.",
+      "Strava data shown inside TriGuide is used as a connected reference feature. AI coaching uses only the information you explicitly provide to TriGuide, including any coaching notes you choose to save.",
       "Your use of third-party services is also governed by their own terms and privacy policies, and we are not responsible for those third-party services.",
     ],
   },

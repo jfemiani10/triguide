@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { asc, eq } from "drizzle-orm";
 import { db } from "../db/index.js";
-import { activities, athleteProfiles, chatMessages, stravaConnections, users } from "../db/schema.js";
+import { activities, athleteProfiles, chatMessages, coachingContextEntries, stravaConnections, users } from "../db/schema.js";
 import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
@@ -81,6 +81,21 @@ router.get("/export", async (request, response) => {
     .where(eq(activities.user_id, request.user.id))
     .orderBy(asc(activities.start_date));
 
+  const exportedCoachingNotes = await db
+    .select({
+      source: coachingContextEntries.source,
+      sport: coachingContextEntries.sport,
+      session_date: coachingContextEntries.session_date,
+      title: coachingContextEntries.title,
+      summary: coachingContextEntries.summary,
+      distance_meters: coachingContextEntries.distance_meters,
+      moving_time_seconds: coachingContextEntries.moving_time_seconds,
+      created_at: coachingContextEntries.created_at,
+    })
+    .from(coachingContextEntries)
+    .where(eq(coachingContextEntries.user_id, request.user.id))
+    .orderBy(asc(coachingContextEntries.created_at));
+
   response.setHeader("Content-Type", "application/json");
   response.setHeader("Content-Disposition", 'attachment; filename="triguide-data-export.json"');
 
@@ -93,6 +108,7 @@ router.get("/export", async (request, response) => {
         chat_messages: exportedChatMessages,
         strava_connection: stravaConnection || null,
         activities: exportedActivities,
+        coaching_notes: exportedCoachingNotes,
       },
       null,
       2,

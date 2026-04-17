@@ -78,6 +78,20 @@ sqlite.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
 
+  CREATE TABLE IF NOT EXISTS coaching_context_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    source TEXT NOT NULL CHECK(source IN ('manual', 'strava_prefill')),
+    sport TEXT,
+    session_date TEXT,
+    title TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    distance_meters INTEGER,
+    moving_time_seconds INTEGER,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+
   CREATE TABLE IF NOT EXISTS strava_connections (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL UNIQUE,

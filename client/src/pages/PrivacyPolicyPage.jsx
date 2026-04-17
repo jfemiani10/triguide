@@ -19,7 +19,7 @@ const sections = [
     title: "2. How We Process Your Information",
     paragraphs: [
       "We use personal information to create and manage accounts, authenticate users, deliver coaching responses, personalize recommendations, sync and display Strava data, maintain service security, and improve the app.",
-      "TriGuide also uses third-party AI services to generate coaching insights. Inputs, conversation history, and relevant profile context may be processed by our AI provider to deliver responses.",
+      "TriGuide also uses third-party AI services to generate coaching insights. Inputs, conversation history, athlete profile context, and any coaching notes you explicitly save in TriGuide may be processed by our AI provider to deliver responses.",
     ],
   },
   {
@@ -35,7 +35,8 @@ const sections = [
     id: "ai",
     title: "4. AI-Based Features",
     paragraphs: [
-      "TriGuide offers AI-powered coaching and insights. To provide these features, relevant user inputs, account context, profile information, and related training context may be processed by our AI service provider, Anthropic.",
+      "TriGuide offers AI-powered coaching and insights. To provide these features, relevant user inputs, account context, profile information, and any coaching notes you explicitly save in TriGuide may be processed by our AI service provider, Anthropic.",
+      "Connected Strava activity data is displayed inside TriGuide for reference, but it is not sent to the AI coach unless you choose to save related details as a coaching note.",
       "These AI features are intended to support endurance training guidance and should not be treated as medical advice.",
     ],
   },
