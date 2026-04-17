@@ -93,45 +93,94 @@ router.get("/context", async (request, response) => {
   return response.json({ notes });
 });
 
-router.post("/context", async (request, response) => {
+function normalizeContextPayload(body) {
   const {
     source = "manual",
+    strava_activity_id = null,
     sport = null,
     session_date = null,
     title,
     summary,
     distance_meters = null,
     moving_time_seconds = null,
-  } = request.body || {};
+  } = body || {};
+
+  return {
+    source,
+    strava_activity_id: strava_activity_id ? String(strava_activity_id).trim() : null,
+    sport: sport ? String(sport).trim() : null,
+    session_date: session_date ? String(session_date).trim() : null,
+    title: String(title || "").trim(),
+    summary: String(summary || "").trim(),
+    distance_meters: distance_meters === null || distance_meters === "" ? null : Number(distance_meters),
+    moving_time_seconds:
+      moving_time_seconds === null || moving_time_seconds === "" ? null : Number(moving_time_seconds),
+  };
+}
+
+function validateContextPayload(payload, response) {
+  const { source, title, summary } = payload;
 
   if (source !== "manual" && source !== "strava_prefill") {
-    return response.status(400).json({ error: "source must be manual or strava_prefill" });
+    response.status(400).json({ error: "source must be manual or strava_prefill" });
+    return false;
   }
 
-  if (!String(title || "").trim()) {
-    return response.status(400).json({ error: "title is required" });
+  if (!title) {
+    response.status(400).json({ error: "title is required" });
+    return false;
   }
 
-  if (!String(summary || "").trim()) {
-    return response.status(400).json({ error: "summary is required" });
+  if (!summary) {
+    response.status(400).json({ error: "summary is required" });
+    return false;
+  }
+
+  return true;
+}
+
+router.post("/context", async (request, response) => {
+  const payload = normalizeContextPayload(request.body);
+
+  if (!validateContextPayload(payload, response)) {
+    return;
   }
 
   const [note] = await db
     .insert(coachingContextEntries)
     .values({
       user_id: request.user.id,
-      source,
-      sport: sport ? String(sport).trim() : null,
-      session_date: session_date ? String(session_date).trim() : null,
-      title: String(title).trim(),
-      summary: String(summary).trim(),
-      distance_meters: distance_meters === null || distance_meters === "" ? null : Number(distance_meters),
-      moving_time_seconds:
-        moving_time_seconds === null || moving_time_seconds === "" ? null : Number(moving_time_seconds),
+      ...payload,
     })
     .returning();
 
   return response.status(201).json({ note });
+});
+
+router.put("/context/:id", async (request, response) => {
+  const noteId = Number(request.params.id);
+
+  if (!Number.isInteger(noteId) || noteId <= 0) {
+    return response.status(400).json({ error: "Invalid note id" });
+  }
+
+  const payload = normalizeContextPayload(request.body);
+
+  if (!validateContextPayload(payload, response)) {
+    return;
+  }
+
+  const [updatedNote] = await db
+    .update(coachingContextEntries)
+    .set(payload)
+    .where(and(eq(coachingContextEntries.id, noteId), eq(coachingContextEntries.user_id, request.user.id)))
+    .returning();
+
+  if (!updatedNote) {
+    return response.status(404).json({ error: "Coaching note not found" });
+  }
+
+  return response.json({ note: updatedNote });
 });
 
 router.delete("/context/:id", async (request, response) => {

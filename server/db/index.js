@@ -82,6 +82,7 @@ sqlite.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     source TEXT NOT NULL CHECK(source IN ('manual', 'strava_prefill')),
+    strava_activity_id TEXT,
     sport TEXT,
     session_date TEXT,
     title TEXT NOT NULL,
@@ -137,6 +138,7 @@ ensureColumn("users", "age_confirmed_at", "TEXT");
 ensureColumn("users", "terms_version", "TEXT NOT NULL DEFAULT '2026-04-17'");
 ensureColumn("users", "privacy_version", "TEXT NOT NULL DEFAULT '2026-04-16'");
 ensureColumn("athlete_profiles", "health_data_consent_at", "TEXT");
+ensureColumn("coaching_context_entries", "strava_activity_id", "TEXT");
 
 sqlite.exec(`
   UPDATE users

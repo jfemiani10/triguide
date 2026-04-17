@@ -133,6 +133,7 @@ function buildPrefillDraft(activity) {
 
   return {
     source: "strava_prefill",
+    strava_activity_id: activity.strava_id,
     sport,
     session_date: dateLabel,
     title: `${sport} session from Strava`,
@@ -144,7 +145,7 @@ function buildPrefillDraft(activity) {
   };
 }
 
-async function buildStatusResponse(user) {
+async function buildStatusResponse(user, activityLimit = 5) {
   await cleanupExpiredActivities(user.id);
 
   const connection = await getConnection(user.id);
@@ -157,7 +158,7 @@ async function buildStatusResponse(user) {
     .from(activities)
     .where(eq(activities.user_id, user.id))
     .orderBy(desc(activities.start_date))
-    .limit(5);
+    .limit(activityLimit);
 
   return {
     user: serializeUser(user),
@@ -211,7 +212,9 @@ router.get("/callback", async (request, response) => {
 router.use(requireAuth);
 
 router.get("/", async (request, response) => {
-  const payload = await buildStatusResponse(request.user);
+  const requestedLimit = Number.parseInt(String(request.query.limit || "5"), 10);
+  const safeLimit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 50) : 5;
+  const payload = await buildStatusResponse(request.user, safeLimit);
   return response.json(payload);
 });
 

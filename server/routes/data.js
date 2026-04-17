@@ -84,6 +84,7 @@ router.get("/export", async (request, response) => {
   const exportedCoachingNotes = await db
     .select({
       source: coachingContextEntries.source,
+      strava_activity_id: coachingContextEntries.strava_activity_id,
       sport: coachingContextEntries.sport,
       session_date: coachingContextEntries.session_date,
       title: coachingContextEntries.title,

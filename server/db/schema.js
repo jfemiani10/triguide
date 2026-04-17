@@ -51,6 +51,7 @@ export const coachingContextEntries = sqliteTable("coaching_context_entries", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   user_id: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   source: text("source", { enum: ["manual", "strava_prefill"] }).notNull(),
+  strava_activity_id: text("strava_activity_id"),
   sport: text("sport"),
   session_date: text("session_date"),
   title: text("title").notNull(),

@@ -67,6 +67,7 @@ function readFlashMessage(searchParams) {
 function createEmptyDraft() {
   return {
     source: "manual",
+    strava_activity_id: "",
     sport: "",
     session_date: "",
     title: "",
@@ -80,6 +81,8 @@ export default function StravaPage() {
   const { refreshProfile } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState(null);
+  const [coachingNotes, setCoachingNotes] = useState([]);
+  const [visibleActivityCount, setVisibleActivityCount] = useState(5);
   const [loading, setLoading] = useState(true);
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
@@ -87,6 +90,7 @@ export default function StravaPage() {
   const [draftSuccess, setDraftSuccess] = useState("");
   const [draftNote, setDraftNote] = useState(createEmptyDraft());
   const [draftActivityId, setDraftActivityId] = useState(null);
+  const [draftNoteId, setDraftNoteId] = useState(null);
   const [flashMessage] = useState(() => readFlashMessage(searchParams));
   const draftFormRef = useRef(null);
 
@@ -98,13 +102,17 @@ export default function StravaPage() {
       setError("");
 
       try {
-        const data = await apiRequest("/strava");
+        const [data, contextData] = await Promise.all([
+          apiRequest(`/strava?limit=${visibleActivityCount}`),
+          apiRequest("/coach/context"),
+        ]);
 
         if (ignore) {
           return;
         }
 
         setStatus(data);
+        setCoachingNotes(contextData.notes || []);
         refreshProfile(data.user);
       } catch (requestError) {
         if (!ignore) {
@@ -122,7 +130,7 @@ export default function StravaPage() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [visibleActivityCount]);
 
   useEffect(() => {
     if (!searchParams.get("status") && !searchParams.get("message")) {
@@ -148,6 +156,14 @@ export default function StravaPage() {
     }));
   }
 
+  const notesByStravaActivityId = coachingNotes.reduce((lookup, note) => {
+    if (note.strava_activity_id) {
+      lookup[note.strava_activity_id] = note;
+    }
+
+    return lookup;
+  }, {});
+
   async function handleConnect() {
     setBusyAction("connect");
     setError("");
@@ -166,9 +182,10 @@ export default function StravaPage() {
     setError("");
 
     try {
-      const data = await apiRequest(path, options);
-      setStatus(data);
-      refreshProfile(data.user);
+      await apiRequest(path, options);
+      const refreshedStatus = await apiRequest(`/strava?limit=${visibleActivityCount}`);
+      setStatus(refreshedStatus);
+      refreshProfile(refreshedStatus.user);
     } catch (requestError) {
       setError(requestError.message || "Strava request failed.");
     } finally {
@@ -182,13 +199,32 @@ export default function StravaPage() {
     setDraftSuccess("");
 
     try {
-      const data = await apiRequest(`/strava/activities/${activityId}/prefill`, { method: "POST" });
-      setDraftNote({
-        ...data.draft,
-        session_date: data.draft.session_date || "",
-        distance_meters: data.draft.distance_meters ?? "",
-        moving_time_seconds: data.draft.moving_time_seconds ?? "",
-      });
+      const activity = status?.recent_activities?.find((entry) => entry.id === activityId);
+      const existingNote = activity?.strava_id ? notesByStravaActivityId[activity.strava_id] : null;
+
+      if (existingNote) {
+        setDraftNote({
+          source: existingNote.source || "strava_prefill",
+          strava_activity_id: existingNote.strava_activity_id || activity?.strava_id || "",
+          sport: existingNote.sport || "",
+          session_date: existingNote.session_date || "",
+          title: existingNote.title || "",
+          summary: existingNote.summary || "",
+          distance_meters: existingNote.distance_meters ?? "",
+          moving_time_seconds: existingNote.moving_time_seconds ?? "",
+        });
+        setDraftNoteId(existingNote.id);
+      } else {
+        const data = await apiRequest(`/strava/activities/${activityId}/prefill`, { method: "POST" });
+        setDraftNote({
+          ...data.draft,
+          session_date: data.draft.session_date || "",
+          distance_meters: data.draft.distance_meters ?? "",
+          moving_time_seconds: data.draft.moving_time_seconds ?? "",
+          strava_activity_id: data.draft.strava_activity_id || activity?.strava_id || "",
+        });
+        setDraftNoteId(null);
+      }
       setDraftActivityId(activityId);
     } catch (requestError) {
       setDraftError(requestError.message || "Unable to prepare coaching note.");
@@ -204,16 +240,27 @@ export default function StravaPage() {
     setDraftSuccess("");
 
     try {
-      await apiRequest("/coach/context", {
-        method: "POST",
+      const payload = {
+        ...draftNote,
+        distance_meters: draftNote.distance_meters ? Number(draftNote.distance_meters) : null,
+        moving_time_seconds: draftNote.moving_time_seconds ? Number(draftNote.moving_time_seconds) : null,
+      };
+      const data = await apiRequest(draftNoteId ? `/coach/context/${draftNoteId}` : "/coach/context", {
+        method: draftNoteId ? "PUT" : "POST",
         body: JSON.stringify({
-          ...draftNote,
-          distance_meters: draftNote.distance_meters ? Number(draftNote.distance_meters) : null,
-          moving_time_seconds: draftNote.moving_time_seconds ? Number(draftNote.moving_time_seconds) : null,
+          ...payload,
         }),
       });
-      setDraftSuccess("Saved to your coaching notes. TriGuide can now use it in future coaching.");
+      setCoachingNotes((current) => {
+        if (draftNoteId) {
+          return current.map((note) => (note.id === data.note.id ? data.note : note));
+        }
+
+        return [data.note, ...current];
+      });
+      setDraftSuccess(draftNoteId ? "Coaching note updated." : "Saved to your coaching notes. TriGuide can now use it in future coaching.");
       setDraftActivityId(null);
+      setDraftNoteId(null);
       setDraftNote(createEmptyDraft());
     } catch (requestError) {
       setDraftError(requestError.message || "Unable to save coaching note.");
@@ -223,6 +270,7 @@ export default function StravaPage() {
   }
 
   const connection = status?.connection;
+  const hasMoreActivities = (status?.activity_count ?? 0) > (status?.recent_activities?.length ?? 0);
 
   return (
     <PageShell>
@@ -388,7 +436,14 @@ export default function StravaPage() {
                   <p className="text-sm text-[var(--text-muted)]">Loading recent activities...</p>
                 ) : status?.recent_activities?.length ? (
                   status.recent_activities.map((activity) => (
-                    <div key={activity.id} className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4">
+                    <div
+                      key={activity.id}
+                      className={`rounded-[4px] border bg-[var(--surface)] p-4 ${
+                        activity.strava_id && notesByStravaActivityId[activity.strava_id]
+                          ? "border-[var(--primary)]"
+                          : "border-[var(--border)]"
+                      }`}
+                    >
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
                           <p className="font-semibold text-[var(--text)]">{activity.sport_type || "Workout"}</p>
@@ -400,13 +455,22 @@ export default function StravaPage() {
                         </div>
                       </div>
                       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
+                        {activity.strava_id && notesByStravaActivityId[activity.strava_id] ? (
+                          <span className="font-['JetBrains_Mono'] text-[0.68rem] uppercase tracking-[0.12em] text-[var(--primary)]">
+                            Added to coaching
+                          </span>
+                        ) : null}
                         <button
                           type="button"
                           onClick={() => handlePrefill(activity.id)}
                           disabled={busyAction === `prefill-${activity.id}`}
                           className="font-semibold text-[var(--primary)] transition hover:text-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          {busyAction === `prefill-${activity.id}` ? "Preparing..." : "Add to coaching"}
+                          {busyAction === `prefill-${activity.id}`
+                            ? "Preparing..."
+                            : activity.strava_id && notesByStravaActivityId[activity.strava_id]
+                              ? "Edit coaching note"
+                              : "Add to coaching"}
                         </button>
                         <a
                           href={`https://www.strava.com/activities/${activity.strava_id}`}
@@ -424,7 +488,7 @@ export default function StravaPage() {
                           onSubmit={handleSaveDraft}
                           className="mt-5 space-y-4 border border-[var(--border)] bg-[var(--bg-alt)] p-4"
                         >
-                          <p className="kicker">Add to coaching</p>
+                          <p className="kicker">{draftNoteId ? "Edit coaching note" : "Add to coaching"}</p>
                           <div className="grid gap-4 sm:grid-cols-2">
                             <div>
                               <p className="metric-label mb-2">Sport</p>
@@ -466,13 +530,14 @@ export default function StravaPage() {
                           {draftError ? <p className="text-sm text-[var(--primary)]">{draftError}</p> : null}
                           <div className="flex flex-wrap gap-3">
                             <Button type="submit" disabled={busyAction === "save-draft"}>
-                              {busyAction === "save-draft" ? "Saving..." : "Save to coaching"}
+                              {busyAction === "save-draft" ? "Saving..." : draftNoteId ? "Update coaching note" : "Save to coaching"}
                             </Button>
                             <Button
                               type="button"
                               variant="ghost"
                               onClick={() => {
                                 setDraftActivityId(null);
+                                setDraftNoteId(null);
                                 setDraftNote(createEmptyDraft());
                                 setDraftError("");
                               }}
@@ -490,6 +555,17 @@ export default function StravaPage() {
                   </p>
                 )}
               </div>
+              {hasMoreActivities ? (
+                <div className="mt-5">
+                  <Button
+                    variant="secondary"
+                    onClick={() => setVisibleActivityCount((current) => current + 5)}
+                    disabled={loading || busyAction === "sync"}
+                  >
+                    Load more activities
+                  </Button>
+                </div>
+              ) : null}
             </CardContent>
           </Card>
         </div>
