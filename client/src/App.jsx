@@ -9,6 +9,7 @@ import DashboardPage from "./pages/DashboardPage";
 import CoachPage from "./pages/CoachPage";
 import ProfilePage from "./pages/ProfilePage";
 import StravaPage from "./pages/StravaPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -81,6 +82,7 @@ function AnimatedRoutes() {
               </OnboardingGate>
             }
           />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="*" element={<Navigate to="/landing" replace />} />
         </Routes>
       </motion.div>
