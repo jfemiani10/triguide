@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Activity, Cable, RefreshCw, Unplug } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../components/ui/page-shell";
@@ -88,6 +88,7 @@ export default function StravaPage() {
   const [draftNote, setDraftNote] = useState(createEmptyDraft());
   const [draftActivityId, setDraftActivityId] = useState(null);
   const [flashMessage] = useState(() => readFlashMessage(searchParams));
+  const draftFormRef = useRef(null);
 
   useEffect(() => {
     let ignore = false;
@@ -133,6 +134,12 @@ export default function StravaPage() {
     nextParams.delete("message");
     setSearchParams(nextParams, { replace: true });
   }, [searchParams, setSearchParams]);
+
+  useEffect(() => {
+    if (draftActivityId && draftFormRef.current) {
+      draftFormRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [draftActivityId]);
 
   function updateDraft(field, value) {
     setDraftNote((current) => ({
@@ -370,57 +377,6 @@ export default function StravaPage() {
                 </p>
               </div>
 
-              {draftActivityId ? (
-                <form onSubmit={handleSaveDraft} className="mt-5 space-y-4 border border-[var(--border)] bg-[var(--bg-alt)] p-4">
-                  <p className="kicker">Add to coaching</p>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <p className="metric-label mb-2">Sport</p>
-                      <Input value={draftNote.sport} onChange={(event) => updateDraft("sport", event.target.value)} />
-                    </div>
-                    <div>
-                      <p className="metric-label mb-2">Session date</p>
-                      <Input type="date" value={draftNote.session_date} onChange={(event) => updateDraft("session_date", event.target.value)} />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="metric-label mb-2">Title</p>
-                    <Input value={draftNote.title} onChange={(event) => updateDraft("title", event.target.value)} />
-                  </div>
-                  <div>
-                    <p className="metric-label mb-2">Summary</p>
-                    <Textarea value={draftNote.summary} onChange={(event) => updateDraft("summary", event.target.value)} />
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <p className="metric-label mb-2">Distance (meters)</p>
-                      <Input type="number" min="0" value={draftNote.distance_meters} onChange={(event) => updateDraft("distance_meters", event.target.value)} />
-                    </div>
-                    <div>
-                      <p className="metric-label mb-2">Moving time (seconds)</p>
-                      <Input type="number" min="0" value={draftNote.moving_time_seconds} onChange={(event) => updateDraft("moving_time_seconds", event.target.value)} />
-                    </div>
-                  </div>
-                  {draftError ? <p className="text-sm text-[var(--primary)]">{draftError}</p> : null}
-                  <div className="flex flex-wrap gap-3">
-                    <Button type="submit" disabled={busyAction === "save-draft"}>
-                      {busyAction === "save-draft" ? "Saving..." : "Save to coaching"}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => {
-                        setDraftActivityId(null);
-                        setDraftNote(createEmptyDraft());
-                        setDraftError("");
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
-              ) : null}
-
               {draftSuccess ? (
                 <div className="mt-5 rounded-[4px] border border-[var(--border)] bg-[var(--bg-alt)] px-4 py-3 text-sm text-[var(--text)]">
                   {draftSuccess}
@@ -462,6 +418,70 @@ export default function StravaPage() {
                           View on Strava
                         </a>
                       </div>
+                      {draftActivityId === activity.id ? (
+                        <form
+                          ref={draftFormRef}
+                          onSubmit={handleSaveDraft}
+                          className="mt-5 space-y-4 border border-[var(--border)] bg-[var(--bg-alt)] p-4"
+                        >
+                          <p className="kicker">Add to coaching</p>
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                              <p className="metric-label mb-2">Sport</p>
+                              <Input value={draftNote.sport} onChange={(event) => updateDraft("sport", event.target.value)} />
+                            </div>
+                            <div>
+                              <p className="metric-label mb-2">Session date</p>
+                              <Input type="date" value={draftNote.session_date} onChange={(event) => updateDraft("session_date", event.target.value)} />
+                            </div>
+                          </div>
+                          <div>
+                            <p className="metric-label mb-2">Title</p>
+                            <Input value={draftNote.title} onChange={(event) => updateDraft("title", event.target.value)} />
+                          </div>
+                          <div>
+                            <p className="metric-label mb-2">Summary</p>
+                            <Textarea value={draftNote.summary} onChange={(event) => updateDraft("summary", event.target.value)} />
+                          </div>
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                              <p className="metric-label mb-2">Distance (meters)</p>
+                              <Input
+                                type="number"
+                                min="0"
+                                value={draftNote.distance_meters}
+                                onChange={(event) => updateDraft("distance_meters", event.target.value)}
+                              />
+                            </div>
+                            <div>
+                              <p className="metric-label mb-2">Moving time (seconds)</p>
+                              <Input
+                                type="number"
+                                min="0"
+                                value={draftNote.moving_time_seconds}
+                                onChange={(event) => updateDraft("moving_time_seconds", event.target.value)}
+                              />
+                            </div>
+                          </div>
+                          {draftError ? <p className="text-sm text-[var(--primary)]">{draftError}</p> : null}
+                          <div className="flex flex-wrap gap-3">
+                            <Button type="submit" disabled={busyAction === "save-draft"}>
+                              {busyAction === "save-draft" ? "Saving..." : "Save to coaching"}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => {
+                                setDraftActivityId(null);
+                                setDraftNote(createEmptyDraft());
+                                setDraftError("");
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </form>
+                      ) : null}
                     </div>
                   ))
                 ) : (
