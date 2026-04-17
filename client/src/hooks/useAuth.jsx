@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import { apiRequest, clearToken, getToken, setToken } from "../lib/api";
 
 const AuthContext = createContext(null);
@@ -42,17 +43,23 @@ export function AuthProvider({ children }) {
     loading,
     isAuthenticated: Boolean(token),
     isOnboarded: Boolean(user?.onboarding_complete),
-    async login(payload) {
-      setToken(payload.token);
-      setTokenState(payload.token);
-      setUser(payload.user);
-      setProfile(payload.profile || null);
+    login(payload) {
+      flushSync(() => {
+        setToken(payload.token);
+        setTokenState(payload.token);
+        setUser(payload.user);
+        setProfile(payload.profile || null);
+        setLoading(false);
+      });
     },
     logout() {
-      clearToken();
-      setTokenState(null);
-      setUser(null);
-      setProfile(null);
+      flushSync(() => {
+        clearToken();
+        setTokenState(null);
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+      });
     },
     refreshProfile(nextUser, nextProfile) {
       if (nextUser) setUser(nextUser);

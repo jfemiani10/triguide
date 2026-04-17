@@ -96,9 +96,11 @@ export function PageShell({ children }) {
                   </>
                 ) : (
                   <>
-                    <NavLink to="/login" className={navLinkClassName}>
-                      Log In
-                    </NavLink>
+                    <Link to="/login">
+                      <Button variant="secondary" className="px-4 py-2">
+                        Log In
+                      </Button>
+                    </Link>
                     <Link to="/signup">
                       <Button className="px-4 py-2">Start Training</Button>
                     </Link>
