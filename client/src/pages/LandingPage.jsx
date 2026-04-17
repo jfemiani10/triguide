@@ -47,7 +47,7 @@ export default function LandingPage() {
                 alt="Time trial cyclist in aerodynamic position"
                 className="h-[620px] w-full translate-y-[18%] object-contain object-right-top"
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_75%,transparent)] to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_78%,transparent)] to-transparent" />
             </div>
 
             <div className="relative z-10 -mt-44 ml-auto w-full max-w-[88%] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.14)] md:p-8">
