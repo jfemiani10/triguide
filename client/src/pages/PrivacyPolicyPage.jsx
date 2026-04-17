@@ -10,6 +10,7 @@ const sections = [
     paragraphs: [
       "We collect personal information you provide directly when you create an account, complete your athlete profile, use the coaching chat, contact us, or connect third-party services.",
       "This may include your name, email address, password, athlete profile details such as goal race, race distance, experience level, weakest discipline, training availability, injury or limiter notes, and messages you send through TriGuide.",
+      "Injury, recovery, and physical limiter information may be treated as sensitive or special-category personal data in some jurisdictions. We collect it only to personalize coaching guidance when you choose to provide it.",
       "If you choose to connect Strava, we may collect authorized profile and activity information from your Strava account, including workout history and related training metrics.",
     ],
   },
@@ -27,7 +28,7 @@ const sections = [
     paragraphs: [
       "We may share information with service providers that help us operate TriGuide, such as hosting, infrastructure, AI, and connected fitness providers.",
       "This currently includes providers such as Vercel, Railway, Anthropic, and Strava, to the extent needed to deliver the Services.",
-      "We do not sell personal information and do not share it for targeted advertising.",
+      "We do not sell personal information and do not share it for targeted advertising. We share information with service providers only as necessary to operate TriGuide and deliver the coaching service.",
     ],
   },
   {
@@ -51,6 +52,7 @@ const sections = [
     title: "6. How We Keep Information Safe",
     paragraphs: [
       "We use reasonable technical and organizational measures designed to protect personal information. However, no internet transmission or storage system can be guaranteed to be completely secure.",
+      "If we become aware of a data breach involving personal information, we will investigate promptly and notify affected users and regulators when required by applicable law, including applicable breach-notification timelines.",
     ],
   },
   {

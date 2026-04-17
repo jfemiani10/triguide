@@ -19,6 +19,15 @@ fs.mkdirSync(path.dirname(databasePath), { recursive: true });
 const sqlite = new Database(databasePath);
 sqlite.pragma("foreign_keys = ON");
 
+function ensureColumn(tableName, columnName, definition) {
+  const columns = sqlite.prepare(`PRAGMA table_info(${tableName})`).all();
+  const hasColumn = columns.some((column) => column.name === columnName);
+
+  if (!hasColumn) {
+    sqlite.exec(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${definition}`);
+  }
+}
+
 sqlite.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,6 +35,11 @@ sqlite.exec(`
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    accepted_terms_at TEXT,
+    accepted_privacy_at TEXT,
+    age_confirmed_at TEXT,
+    terms_version TEXT NOT NULL DEFAULT '2026-04-17',
+    privacy_version TEXT NOT NULL DEFAULT '2026-04-16',
     onboarding_complete INTEGER NOT NULL DEFAULT 0,
     strava_connected INTEGER NOT NULL DEFAULT 0,
     demo_messages_remaining INTEGER NOT NULL DEFAULT 20
@@ -41,6 +55,7 @@ sqlite.exec(`
     weakest_discipline TEXT NOT NULL,
     weekly_hours INTEGER NOT NULL,
     injuries_limiters TEXT,
+    health_data_consent_at TEXT,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
@@ -101,6 +116,13 @@ sqlite.exec(`
 
   CREATE UNIQUE INDEX IF NOT EXISTS activities_user_strava_id_idx ON activities(user_id, strava_id);
 `);
+
+ensureColumn("users", "accepted_terms_at", "TEXT");
+ensureColumn("users", "accepted_privacy_at", "TEXT");
+ensureColumn("users", "age_confirmed_at", "TEXT");
+ensureColumn("users", "terms_version", "TEXT NOT NULL DEFAULT '2026-04-17'");
+ensureColumn("users", "privacy_version", "TEXT NOT NULL DEFAULT '2026-04-16'");
+ensureColumn("athlete_profiles", "health_data_consent_at", "TEXT");
 
 export const db = drizzle(sqlite, { schema });
 export { sqlite };

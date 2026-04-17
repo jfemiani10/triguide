@@ -20,6 +20,7 @@ export default function ProfilePage() {
     weakest_discipline: profile?.weakest_discipline || "",
     weekly_hours: profile?.weekly_hours || 6,
     injuries_limiters: profile?.injuries_limiters || "",
+    health_data_consent: Boolean(profile?.health_data_consent_at),
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -111,6 +112,17 @@ export default function ProfilePage() {
                   value={form.injuries_limiters}
                   onChange={(event) => setForm((current) => ({ ...current, injuries_limiters: event.target.value }))}
                 />
+                <label className="mt-4 flex items-start gap-3 rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-[var(--primary)]"
+                    checked={Boolean(form.health_data_consent)}
+                    onChange={(event) => setForm((current) => ({ ...current, health_data_consent: event.target.checked }))}
+                  />
+                  <span>
+                    If I share injury or health information here, I consent to TriGuide processing it to personalize coaching guidance.
+                  </span>
+                </label>
               </div>
               <div className="md:col-span-2">
                 <FieldError message={error} />

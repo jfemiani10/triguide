@@ -7,6 +7,11 @@ export const users = sqliteTable("users", {
   email: text("email").notNull().unique(),
   password_hash: text("password_hash").notNull(),
   created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  accepted_terms_at: text("accepted_terms_at"),
+  accepted_privacy_at: text("accepted_privacy_at"),
+  age_confirmed_at: text("age_confirmed_at"),
+  terms_version: text("terms_version").default("2026-04-17").notNull(),
+  privacy_version: text("privacy_version").default("2026-04-16").notNull(),
   onboarding_complete: integer("onboarding_complete", { mode: "boolean" }).default(false).notNull(),
   strava_connected: integer("strava_connected", { mode: "boolean" }).default(false).notNull(),
   demo_messages_remaining: integer("demo_messages_remaining").default(20).notNull(),
@@ -22,6 +27,7 @@ export const athleteProfiles = sqliteTable("athlete_profiles", {
   weakest_discipline: text("weakest_discipline").notNull(),
   weekly_hours: integer("weekly_hours").notNull(),
   injuries_limiters: text("injuries_limiters"),
+  health_data_consent_at: text("health_data_consent_at"),
   updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });
 

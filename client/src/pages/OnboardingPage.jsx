@@ -19,6 +19,7 @@ const defaultForm = {
   weakest_discipline: "",
   weekly_hours: 6,
   injuries_limiters: "",
+  health_data_consent: false,
 };
 
 export default function OnboardingPage() {
@@ -33,10 +34,18 @@ export default function OnboardingPage() {
     async function load() {
       try {
         const data = await apiRequest("/onboarding");
-        setForm((current) => ({ ...current, ...data.profile }));
+        setForm((current) => ({
+          ...current,
+          ...data.profile,
+          health_data_consent: Boolean(data.profile?.health_data_consent_at),
+        }));
       } catch (err) {
         if (profile) {
-          setForm((current) => ({ ...current, ...profile }));
+          setForm((current) => ({
+            ...current,
+            ...profile,
+            health_data_consent: Boolean(profile.health_data_consent_at),
+          }));
         }
       } finally {
         setLoading(false);
@@ -195,6 +204,17 @@ export default function OnboardingPage() {
                   value={form.injuries_limiters || ""}
                   onChange={(event) => setForm((current) => ({ ...current, injuries_limiters: event.target.value }))}
                 />
+                <label className="mt-4 flex items-start gap-3 rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-[var(--primary)]"
+                    checked={Boolean(form.health_data_consent)}
+                    onChange={(event) => setForm((current) => ({ ...current, health_data_consent: event.target.checked }))}
+                  />
+                  <span>
+                    If I share injury or health information here, I consent to TriGuide processing it to personalize coaching guidance.
+                  </span>
+                </label>
               </div>
 
               <div className="md:col-span-2">

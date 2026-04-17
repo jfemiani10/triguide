@@ -6,6 +6,8 @@ import { users, athleteProfiles } from "../db/schema.js";
 import { eq } from "drizzle-orm";
 
 const router = Router();
+const TERMS_VERSION = "2026-04-17";
+const PRIVACY_VERSION = "2026-04-16";
 
 function signToken(user) {
   return jwt.sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -24,10 +26,18 @@ function serializeUser(user) {
 }
 
 router.post("/signup", async (request, response) => {
-  const { name, email, password } = request.body || {};
+  const { name, email, password, accepted_terms, accepted_privacy, age_confirmed } = request.body || {};
 
   if (!name || !email || !password || password.length < 8) {
     return response.status(400).json({ error: "Name, email, and password (min 8 chars) are required" });
+  }
+
+  if (!accepted_terms || !accepted_privacy) {
+    return response.status(400).json({ error: "You must agree to the Terms of Use and Privacy Policy" });
+  }
+
+  if (!age_confirmed) {
+    return response.status(400).json({ error: "You must confirm that you are 18 or older" });
   }
 
   const normalizedEmail = String(email).trim().toLowerCase();
@@ -38,10 +48,16 @@ router.post("/signup", async (request, response) => {
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
+  const consentedAt = new Date().toISOString();
   const result = await db.insert(users).values({
     name: String(name).trim(),
     email: normalizedEmail,
     password_hash: passwordHash,
+    accepted_terms_at: consentedAt,
+    accepted_privacy_at: consentedAt,
+    age_confirmed_at: consentedAt,
+    terms_version: TERMS_VERSION,
+    privacy_version: PRIVACY_VERSION,
   }).returning();
 
   const createdUser = result[0];

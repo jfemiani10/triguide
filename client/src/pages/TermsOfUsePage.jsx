@@ -41,7 +41,7 @@ const sections = [
     title: "5. AI Coaching Disclaimer",
     paragraphs: [
       "TriGuide provides AI-assisted coaching and training guidance for informational purposes only. It is not medical advice, diagnosis, treatment, or emergency guidance.",
-      "You are responsible for evaluating whether any training recommendation is appropriate for your health, fitness level, injuries, and circumstances.",
+      "You are responsible for evaluating whether any training recommendation is appropriate for your health, fitness level, injuries, and circumstances. Consult a physician or other qualified professional before beginning or changing a training program, especially if you have injuries, pain, or other health concerns.",
     ],
   },
   {

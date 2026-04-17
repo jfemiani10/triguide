@@ -12,7 +12,14 @@ import { useAuth } from "../hooks/useAuth";
 export default function SignupPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    accepted_terms: false,
+    accepted_privacy: false,
+    age_confirmed: false,
+  });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -80,6 +87,42 @@ export default function SignupPage() {
                   required
                 />
               </div>
+              <label className="flex items-start gap-3 rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+                <input
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 accent-[var(--primary)]"
+                  checked={form.accepted_terms}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      accepted_terms: event.target.checked,
+                      accepted_privacy: event.target.checked,
+                    }))
+                  }
+                  required
+                />
+                <span>
+                  I agree to the{" "}
+                  <Link to="/terms-of-use" className="font-semibold text-[var(--secondary)] hover:underline">
+                    Terms of Use
+                  </Link>
+                  {" "}and{" "}
+                  <Link to="/privacy-policy" className="font-semibold text-[var(--secondary)] hover:underline">
+                    Privacy Policy
+                  </Link>
+                  .
+                </span>
+              </label>
+              <label className="flex items-start gap-3 rounded-[20px] border border-white/8 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+                <input
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 accent-[var(--primary)]"
+                  checked={form.age_confirmed}
+                  onChange={(event) => setForm((current) => ({ ...current, age_confirmed: event.target.checked }))}
+                  required
+                />
+                <span>I confirm that I am 18 years of age or older.</span>
+              </label>
               <FieldError message={error} />
               <Button className="w-full" disabled={submitting}>
                 {submitting ? "Creating account..." : "Create Account"}

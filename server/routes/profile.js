@@ -20,6 +20,11 @@ function validateProfileInput(payload) {
     return "weekly_hours must be an integer between 3 and 20";
   }
 
+  const injuriesLimiters = String(payload?.injuries_limiters || "").trim();
+  if (injuriesLimiters && !payload?.health_data_consent) {
+    return "Health data consent is required if you share injuries or physical limiters";
+  }
+
   return null;
 }
 
@@ -50,6 +55,7 @@ async function upsertOnboarding(request, response) {
     weakest_discipline: request.body.weakest_discipline.trim(),
     weekly_hours: Number(request.body.weekly_hours),
     injuries_limiters: request.body.injuries_limiters?.trim() || null,
+    health_data_consent_at: request.body.injuries_limiters?.trim() ? new Date().toISOString() : null,
     updated_at: new Date().toISOString(),
   };
 
@@ -108,6 +114,7 @@ router.put("/profile", async (request, response) => {
       weakest_discipline: request.body.weakest_discipline.trim(),
       weekly_hours: Number(request.body.weekly_hours),
       injuries_limiters: request.body.injuries_limiters?.trim() || null,
+      health_data_consent_at: request.body.injuries_limiters?.trim() ? new Date().toISOString() : null,
       updated_at: new Date().toISOString(),
     })
     .where(eq(athleteProfiles.user_id, request.user.id));
