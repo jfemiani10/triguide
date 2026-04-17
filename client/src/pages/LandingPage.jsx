@@ -45,7 +45,7 @@ export default function LandingPage() {
               <img
                 src="/hero-cyclist-cutout.png"
                 alt="Time trial cyclist in aerodynamic position"
-                className="h-[620px] w-full translate-y-[12%] object-contain object-right-top"
+                className="h-[620px] w-full translate-y-[18%] object-contain object-right-top"
               />
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_75%,transparent)] to-transparent" />
             </div>
