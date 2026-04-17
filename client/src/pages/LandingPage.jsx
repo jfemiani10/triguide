@@ -41,16 +41,16 @@ export default function LandingPage() {
           </div>
 
           <div className="relative lg:pl-4">
-            <div className="relative overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-alt)]">
+            <div className="relative overflow-hidden bg-[var(--bg)]">
               <img
                 src="/hero-cyclist-cutout.png"
                 alt="Time trial cyclist in aerodynamic position"
-                className="h-[540px] w-full object-contain object-right-top p-4 md:p-6"
+                className="h-[620px] w-full translate-y-[12%] object-contain object-right-top"
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_72%,transparent)] to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[var(--bg)] via-[color:color-mix(in_srgb,var(--bg)_75%,transparent)] to-transparent" />
             </div>
 
-            <div className="relative z-10 -mt-28 ml-auto w-full max-w-[88%] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.14)] md:p-8">
+            <div className="relative z-10 -mt-44 ml-auto w-full max-w-[88%] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.14)] md:p-8">
               <div>
                 <p className="kicker">Built For Race Season</p>
                 <p className="mt-3 text-base leading-7 text-[var(--text-muted)]">
