@@ -96,14 +96,30 @@ export function PageShell({ children }) {
                   </>
                 ) : (
                   <>
-                    <Link to="/login">
-                      <Button variant="secondary" className="px-4 py-2">
-                        Log In
-                      </Button>
-                    </Link>
-                    <Link to="/signup">
-                      <Button className="px-4 py-2">Start Training</Button>
-                    </Link>
+                    <NavLink to="/login">
+                      {({ isActive }) => (
+                        <Button
+                          variant={isActive ? "primary" : "secondary"}
+                          className="min-w-[140px] px-4 py-2"
+                        >
+                          Log In
+                        </Button>
+                      )}
+                    </NavLink>
+                    <NavLink to="/signup">
+                      {({ isActive }) => (
+                        <Button
+                          variant="primary"
+                          className={
+                            isActive
+                              ? "min-w-[140px] px-4 py-2 ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--surface)]"
+                              : "min-w-[140px] px-4 py-2"
+                          }
+                        >
+                          Start Training
+                        </Button>
+                      )}
+                    </NavLink>
                   </>
                 )}
               </nav>
