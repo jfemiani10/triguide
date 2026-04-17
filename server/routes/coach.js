@@ -7,6 +7,7 @@ import { createCoachResponse } from "../services/anthropic.js";
 import { serializeUser } from "./auth.js";
 
 const router = Router();
+const MAX_PROMPT_CHARACTERS = 4000;
 
 function formatDuration(seconds) {
   if (!seconds) {
@@ -98,6 +99,12 @@ router.post("/chat", async (request, response) => {
 
   if (!String(message || "").trim()) {
     return response.status(400).json({ error: "message is required" });
+  }
+
+  if (String(message).trim().length > MAX_PROMPT_CHARACTERS) {
+    return response.status(400).json({
+      error: `Message is too long. Keep prompts under ${MAX_PROMPT_CHARACTERS} characters.`,
+    });
   }
 
   if (request.user.demo_messages_remaining <= 0) {

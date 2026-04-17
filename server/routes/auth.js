@@ -58,6 +58,7 @@ router.post("/signup", async (request, response) => {
     age_confirmed_at: consentedAt,
     terms_version: TERMS_VERSION,
     privacy_version: PRIVACY_VERSION,
+    demo_messages_remaining: 3,
   }).returning();
 
   const createdUser = result[0];

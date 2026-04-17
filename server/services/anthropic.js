@@ -4,6 +4,7 @@ dotenv.config();
 
 const MODEL = "claude-sonnet-4-20250514";
 const API_URL = "https://api.anthropic.com/v1/messages";
+const MAX_RESPONSE_TOKENS = 450;
 
 export async function createCoachResponse({ systemPrompt, conversationHistory }) {
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -19,7 +20,7 @@ export async function createCoachResponse({ systemPrompt, conversationHistory })
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 900,
+      max_tokens: MAX_RESPONSE_TOKENS,
       system: systemPrompt,
       messages: conversationHistory.map((entry) => ({
         role: entry.role,

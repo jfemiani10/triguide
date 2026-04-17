@@ -42,7 +42,7 @@ sqlite.exec(`
     privacy_version TEXT NOT NULL DEFAULT '2026-04-16',
     onboarding_complete INTEGER NOT NULL DEFAULT 0,
     strava_connected INTEGER NOT NULL DEFAULT 0,
-    demo_messages_remaining INTEGER NOT NULL DEFAULT 20
+    demo_messages_remaining INTEGER NOT NULL DEFAULT 3
   );
 
   CREATE TABLE IF NOT EXISTS athlete_profiles (
@@ -123,6 +123,12 @@ ensureColumn("users", "age_confirmed_at", "TEXT");
 ensureColumn("users", "terms_version", "TEXT NOT NULL DEFAULT '2026-04-17'");
 ensureColumn("users", "privacy_version", "TEXT NOT NULL DEFAULT '2026-04-16'");
 ensureColumn("athlete_profiles", "health_data_consent_at", "TEXT");
+
+sqlite.exec(`
+  UPDATE users
+  SET demo_messages_remaining = 3
+  WHERE demo_messages_remaining > 3
+`);
 
 export const db = drizzle(sqlite, { schema });
 export { sqlite };

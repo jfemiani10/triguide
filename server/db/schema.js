@@ -14,7 +14,7 @@ export const users = sqliteTable("users", {
   privacy_version: text("privacy_version").default("2026-04-16").notNull(),
   onboarding_complete: integer("onboarding_complete", { mode: "boolean" }).default(false).notNull(),
   strava_connected: integer("strava_connected", { mode: "boolean" }).default(false).notNull(),
-  demo_messages_remaining: integer("demo_messages_remaining").default(20).notNull(),
+  demo_messages_remaining: integer("demo_messages_remaining").default(3).notNull(),
 });
 
 export const athleteProfiles = sqliteTable("athlete_profiles", {
