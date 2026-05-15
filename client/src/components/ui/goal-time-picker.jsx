@@ -39,7 +39,7 @@ const SegmentBox = forwardRef(function SegmentBox(
           "h-14 w-14 rounded border border-[var(--border)] bg-[var(--surface)]",
           "text-center text-2xl font-semibold text-[var(--text)]",
           "outline-none transition-colors",
-          "focus:border-[var(--primary)] focus:shadow-[0_0_0_2px_rgba(192,57,43,0.12)]",
+          "focus:border-[var(--primary)] focus:shadow-[0_0_0_2px_var(--focus-ring)]",
           "placeholder:text-[var(--text-muted)] placeholder:font-normal placeholder:text-xl"
         )}
       />

@@ -1,23 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ChevronRight, Moon, Sun, UserCircle2 } from "lucide-react";
+import { ChevronRight, Moon, Settings, Sun, UserCircle2 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { Button } from "./button";
 
 export function PageShell({ children }) {
   const { isAuthenticated, logout } = useAuth();
   const [theme, setTheme] = useState(() => {
-    if (typeof window === "undefined") {
-      return "dark";
-    }
-
+    if (typeof window === "undefined") return "dark";
     return localStorage.getItem("triguide-theme") || "dark";
   });
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsRef = useRef(null);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem("triguide-theme", theme);
-  }, [theme]);
+    if (isAuthenticated) {
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem("triguide-theme", theme);
+    } else {
+      document.documentElement.dataset.theme = "dark";
+    }
+  }, [theme, isAuthenticated]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
+    function onClickOutside(e) {
+      if (settingsRef.current && !settingsRef.current.contains(e.target)) {
+        setSettingsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [settingsOpen]);
 
   function toggleTheme() {
     setTheme((current) => (current === "dark" ? "light" : "dark"));
@@ -63,18 +77,6 @@ export function PageShell({ children }) {
             </Link>
 
             <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="inline-flex items-center gap-2 rounded-[4px] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-muted)] transition hover:text-[var(--primary)]"
-                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-              >
-                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                <span className="font-['JetBrains_Mono'] text-[0.68rem] uppercase tracking-[0.12em]">
-                  {theme === "dark" ? "Light" : "Dark"}
-                </span>
-              </button>
-
               <nav className="flex flex-wrap items-center gap-1 text-sm">
                 {isAuthenticated ? (
                   <>
@@ -123,6 +125,46 @@ export function PageShell({ children }) {
                   </>
                 )}
               </nav>
+
+              {isAuthenticated && (
+                <div ref={settingsRef} className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setSettingsOpen((v) => !v)}
+                    aria-label="Settings"
+                    aria-expanded={settingsOpen}
+                    className="inline-flex items-center justify-center rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-2 text-[var(--text-muted)] transition hover:text-[var(--primary)]"
+                  >
+                    <Settings className="h-4 w-4" />
+                  </button>
+
+                  {settingsOpen && (
+                    <div className="absolute right-0 top-full z-50 mt-2 w-52 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-lg">
+                      <p className="font-['JetBrains_Mono'] text-[0.68rem] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                        Appearance
+                      </p>
+                      <div className="mt-3 flex items-center justify-between gap-3">
+                        <span className="text-sm text-[var(--text)]">Theme</span>
+                        <button
+                          type="button"
+                          onClick={toggleTheme}
+                          className="inline-flex items-center gap-1.5 rounded-[4px] border border-[var(--border)] bg-[var(--bg-alt)] px-2.5 py-1.5 text-xs font-medium text-[var(--text-muted)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
+                          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                        >
+                          {theme === "dark" ? (
+                            <Sun className="h-3.5 w-3.5" />
+                          ) : (
+                            <Moon className="h-3.5 w-3.5" />
+                          )}
+                          <span className="font-['JetBrains_Mono'] text-[0.68rem] uppercase tracking-[0.1em]">
+                            {theme === "dark" ? "Light" : "Dark"}
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
