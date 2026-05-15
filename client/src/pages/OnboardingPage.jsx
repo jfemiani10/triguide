@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Progress } from "../components/ui/progress";
 import { Button } from "../components/ui/button";
 import { FieldError } from "../components/ui/form-field";
+import { GoalTimePicker } from "../components/ui/goal-time-picker";
 import { apiRequest } from "../lib/api";
 import { useAuth } from "../hooks/useAuth";
 
@@ -199,15 +200,11 @@ export default function OnboardingPage() {
 
               <div>
                 <Label htmlFor="goal_finish_time">Goal finish time</Label>
-                <Input
+                <GoalTimePicker
                   id="goal_finish_time"
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="5:12:30"
                   value={form.goal_finish_time || ""}
-                  onChange={(event) => setForm((current) => ({ ...current, goal_finish_time: event.target.value }))}
+                  onChange={(value) => setForm((current) => ({ ...current, goal_finish_time: value }))}
                 />
-                <p className="mt-2 text-sm text-[var(--text-muted)]">Enter race duration as hours, minutes, and seconds, for example `5:12:30`.</p>
               </div>
 
               <div>
