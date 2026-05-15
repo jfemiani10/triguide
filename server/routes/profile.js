@@ -7,17 +7,32 @@ import { serializeUser } from "./auth.js";
 
 const router = Router();
 
+const fieldLabels = {
+  goal: "Main goal",
+  race_distance: "Race distance",
+  experience_level: "Experience level",
+  weakest_discipline: "Weakest discipline",
+  weekly_hours: "Weekly training hours",
+  goal_finish_time: "Goal finish time",
+};
+
 function validateProfileInput(payload) {
-  const requiredFields = ["goal", "race_distance", "experience_level", "weakest_discipline"];
+  // Fields listed here become required. Currently empty so all fields are optional.
+  // To make a field required again, add its key to this array.
+  const requiredFields = [];
   for (const field of requiredFields) {
     if (!String(payload?.[field] || "").trim()) {
-      return `${field} is required`;
+      const label = fieldLabels[field] || field;
+      return `${label} is required`;
     }
   }
 
-  const weeklyHours = Number(payload?.weekly_hours);
-  if (!Number.isInteger(weeklyHours) || weeklyHours < 3 || weeklyHours > 20) {
-    return "weekly_hours must be an integer between 3 and 20";
+  const weeklyHoursRaw = payload?.weekly_hours;
+  if (weeklyHoursRaw !== undefined && weeklyHoursRaw !== null && weeklyHoursRaw !== "") {
+    const weeklyHours = Number(weeklyHoursRaw);
+    if (!Number.isInteger(weeklyHours) || weeklyHours < 3 || weeklyHours > 20) {
+      return `${fieldLabels.weekly_hours} must be a whole number between 3 and 20`;
+    }
   }
 
   const injuriesLimiters = String(payload?.injuries_limiters || "").trim();
@@ -27,7 +42,7 @@ function validateProfileInput(payload) {
 
   const goalFinishTime = String(payload?.goal_finish_time || "").trim();
   if (goalFinishTime && !/^\d{1,2}:\d{2}:\d{2}$/.test(goalFinishTime)) {
-    return "goal_finish_time must use H:MM:SS or HH:MM:SS format";
+    return `${fieldLabels.goal_finish_time} must be in H:MM:SS format (for example 5:12:30)`;
   }
 
   return null;
@@ -51,18 +66,19 @@ async function upsertOnboarding(request, response) {
     return response.status(400).json({ error });
   }
 
+  const raceDistance = request.body.race_distance?.trim() || null;
   const payload = {
     user_id: request.user.id,
-    goal: request.body.goal.trim(),
-    target_race: request.body.target_race?.trim() || `${request.body.race_distance.trim()} goal race`,
+    goal: request.body.goal?.trim() || null,
+    target_race: request.body.target_race?.trim() || (raceDistance ? `${raceDistance} goal race` : null),
     race_date: request.body.race_date_undetermined ? null : request.body.race_date?.trim() || null,
     race_date_undetermined: Boolean(request.body.race_date_undetermined),
-    race_distance: request.body.race_distance.trim(),
+    race_distance: raceDistance,
     goal_finish_time: request.body.goal_finish_time?.trim() || null,
     goal_finish_time_undetermined: false,
-    experience_level: request.body.experience_level.trim(),
-    weakest_discipline: request.body.weakest_discipline.trim(),
-    weekly_hours: Number(request.body.weekly_hours),
+    experience_level: request.body.experience_level?.trim() || null,
+    weakest_discipline: request.body.weakest_discipline?.trim() || null,
+    weekly_hours: request.body.weekly_hours ? Number(request.body.weekly_hours) : null,
     injuries_limiters: request.body.injuries_limiters?.trim() || null,
     health_data_consent_at: request.body.injuries_limiters?.trim() ? new Date().toISOString() : null,
     updated_at: new Date().toISOString(),
@@ -113,19 +129,20 @@ router.put("/profile", async (request, response) => {
     return response.status(404).json({ error: "Profile not found. Complete onboarding first." });
   }
 
+  const updatedRaceDistance = request.body.race_distance?.trim() || null;
   await db
     .update(athleteProfiles)
     .set({
-      goal: request.body.goal.trim(),
-      target_race: request.body.target_race?.trim() || `${request.body.race_distance.trim()} goal race`,
+      goal: request.body.goal?.trim() || null,
+      target_race: request.body.target_race?.trim() || (updatedRaceDistance ? `${updatedRaceDistance} goal race` : null),
       race_date: request.body.race_date_undetermined ? null : request.body.race_date?.trim() || null,
       race_date_undetermined: Boolean(request.body.race_date_undetermined),
-      race_distance: request.body.race_distance.trim(),
+      race_distance: updatedRaceDistance,
       goal_finish_time: request.body.goal_finish_time?.trim() || null,
       goal_finish_time_undetermined: false,
-      experience_level: request.body.experience_level.trim(),
-      weakest_discipline: request.body.weakest_discipline.trim(),
-      weekly_hours: Number(request.body.weekly_hours),
+      experience_level: request.body.experience_level?.trim() || null,
+      weakest_discipline: request.body.weakest_discipline?.trim() || null,
+      weekly_hours: request.body.weekly_hours ? Number(request.body.weekly_hours) : null,
       injuries_limiters: request.body.injuries_limiters?.trim() || null,
       health_data_consent_at: request.body.injuries_limiters?.trim() ? new Date().toISOString() : null,
       updated_at: new Date().toISOString(),

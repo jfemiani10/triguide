@@ -71,7 +71,7 @@ export default function ProfilePage() {
             <form className="grid gap-5 md:grid-cols-2" onSubmit={handleSubmit}>
               <div>
                 <Label htmlFor="goal">Main goal</Label>
-                <Input id="goal" value={form.goal} onChange={(event) => setForm((current) => ({ ...current, goal: event.target.value }))} required />
+                <Input id="goal" value={form.goal} onChange={(event) => setForm((current) => ({ ...current, goal: event.target.value }))} />
               </div>
               <div>
                 <Label htmlFor="target_race">Target race</Label>
@@ -79,7 +79,6 @@ export default function ProfilePage() {
                   id="target_race"
                   value={form.target_race}
                   onChange={(event) => setForm((current) => ({ ...current, target_race: event.target.value }))}
-                  required
                 />
               </div>
               <div>
@@ -88,7 +87,6 @@ export default function ProfilePage() {
                   id="race_distance"
                   value={form.race_distance}
                   onChange={(event) => setForm((current) => ({ ...current, race_distance: event.target.value }))}
-                  required
                 />
               </div>
               <div>
@@ -130,7 +128,6 @@ export default function ProfilePage() {
                   id="experience_level"
                   value={form.experience_level}
                   onChange={(event) => setForm((current) => ({ ...current, experience_level: event.target.value }))}
-                  required
                 />
               </div>
               <div>
@@ -139,7 +136,6 @@ export default function ProfilePage() {
                   id="weakest_discipline"
                   value={form.weakest_discipline}
                   onChange={(event) => setForm((current) => ({ ...current, weakest_discipline: event.target.value }))}
-                  required
                 />
               </div>
               <div>
@@ -151,7 +147,6 @@ export default function ProfilePage() {
                   max={20}
                   value={form.weekly_hours}
                   onChange={(event) => setForm((current) => ({ ...current, weekly_hours: event.target.value }))}
-                  required
                 />
               </div>
               <div className="md:col-span-2">

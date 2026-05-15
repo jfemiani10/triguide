@@ -5,7 +5,6 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import OnboardingPage from "./pages/OnboardingPage";
-import DashboardPage from "./pages/DashboardPage";
 import CoachPage from "./pages/CoachPage";
 import ProfilePage from "./pages/ProfilePage";
 import StravaPage from "./pages/StravaPage";
@@ -51,14 +50,6 @@ function AnimatedRoutes() {
               <AuthGate>
                 <OnboardingPage />
               </AuthGate>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <OnboardingGate>
-                <DashboardPage />
-              </OnboardingGate>
             }
           />
           <Route

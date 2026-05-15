@@ -106,8 +106,7 @@ export default function OnboardingPage() {
                     Build your athlete profile
                   </h2>
                   <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--text-muted)]">
-                    TriGuide uses this information to personalize every recommendation. Complete all required fields to
-                    unlock your dashboard and coaching chat.
+                    TriGuide uses this information to personalize every recommendation. Fill in as much as you know — you can always update it later.
                   </p>
                 </div>
                 <div className="hidden border-l border-[var(--border)] pl-6 text-right md:block">
@@ -145,7 +144,6 @@ export default function OnboardingPage() {
                   placeholder="IRONMAN 70.3 Ohio"
                   value={form.target_race}
                   onChange={(event) => setForm((current) => ({ ...current, target_race: event.target.value }))}
-                  required
                 />
               </div>
 
@@ -251,7 +249,6 @@ export default function OnboardingPage() {
                   max={20}
                   value={form.weekly_hours}
                   onChange={(event) => setForm((current) => ({ ...current, weekly_hours: event.target.value }))}
-                  required
                 />
               </div>
 

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {
   Activity,
   ChevronRight,
-  LayoutDashboard,
   LogOut,
   Moon,
   Settings,
@@ -128,12 +127,6 @@ export function PageShell({ children }) {
                         to="/profile"
                         icon={User}
                         label="Edit Profile"
-                        onClick={() => setMenuOpen(false)}
-                      />
-                      <MenuLink
-                        to="/dashboard"
-                        icon={LayoutDashboard}
-                        label="Athlete Dashboard"
                         onClick={() => setMenuOpen(false)}
                       />
                       <MenuLink
