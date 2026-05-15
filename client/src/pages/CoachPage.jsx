@@ -173,16 +173,24 @@ export default function CoachPage() {
               {messages.map((entry, index) => (
                 <div
                   key={`${entry.role}-${index}`}
-                  className={`max-w-[90%] px-4 py-4 ${
-                    entry.role === "user"
-                      ? "bg-[#fdf0ee] text-[var(--text)]"
-                      : "border-l-[4px] border-[var(--accent)] bg-[var(--surface)] text-[var(--text)] shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
-                  }`}
+                  className={`flex ${entry.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  <p className="mb-2 font-['JetBrains_Mono'] text-[0.72rem] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">
-                    {entry.role === "user" ? "You" : "Coach"}
-                  </p>
-                  <p className="whitespace-pre-wrap leading-7">{entry.content}</p>
+                  <div
+                    className={`max-w-[85%] px-4 py-4 ${
+                      entry.role === "user"
+                        ? "bg-[var(--primary)] text-white"
+                        : "border-l-[4px] border-[var(--accent)] bg-[var(--surface)] text-[var(--text)] shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+                    }`}
+                  >
+                    <p
+                      className={`mb-2 font-['JetBrains_Mono'] text-[0.72rem] font-medium uppercase tracking-[0.12em] ${
+                        entry.role === "user" ? "text-white/70" : "text-[var(--text-muted)]"
+                      }`}
+                    >
+                      {entry.role === "user" ? "You" : "Coach"}
+                    </p>
+                    <p className="whitespace-pre-wrap leading-7">{entry.content}</p>
+                  </div>
                 </div>
               ))}
 
