@@ -79,7 +79,7 @@ export default function OnboardingPage() {
         body: JSON.stringify(payload),
       });
       refreshProfile(data.user, data.profile);
-      navigate("/dashboard", { replace: true });
+      navigate("/coach", { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {

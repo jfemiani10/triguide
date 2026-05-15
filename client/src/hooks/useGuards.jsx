@@ -19,7 +19,7 @@ export function GuestGate({ children }) {
 
   if (loading) return <GuardFallback />;
   if (isAuthenticated) {
-    return <Navigate to={isOnboarded ? "/dashboard" : "/onboarding"} replace />;
+    return <Navigate to={isOnboarded ? "/coach" : "/onboarding"} replace />;
   }
 
   return children;
