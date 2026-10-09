@@ -28,6 +28,7 @@ server/data/triguide.db               ← SQLite on a host bind mount
 | `deploy/tailscale-funnel.sh` | Turns on Funnel for port 3001 (needs root) |
 | `deploy/finish-migration.sh` | Does steps 2-5 below in one go (needs root) |
 | `deploy/host-reboot-safely.sh` | Pre-reboot safety checks + sysrq reboot for the wedged-systemd case (needs root) |
+| `deploy/backup-db.sh` | Verified nightly SQLite snapshot + retention (no root needed) |
 
 ## Finishing the migration in one command
 
@@ -116,13 +117,24 @@ tailscale funnel status             # confirm the public route
 
 ## Backups
 
-The whole database is one file: `server/data/triguide.db`. Back it up with the
-container running using SQLite's online backup:
+The whole database is one file: `server/data/triguide.db`. `deploy/backup-db.sh`
+takes a consistent snapshot with SQLite's online backup (safe while the API is
+writing), verifies it with `PRAGMA integrity_check`, reports the user count, and
+prunes to the newest 14:
 
 ```bash
-docker compose exec api node -e \
-  "new (require('better-sqlite3'))('/app/data/triguide.db').backup('/app/data/backup-'+Date.now()+'.db')"
+./deploy/backup-db.sh          # run on demand
 ```
+
+It runs nightly at 03:00 from jonahhome's crontab:
+
+```
+0 3 * * * /home/jonahhome/projects/triguide/deploy/backup-db.sh >> /home/jonahhome/backups/triguide/backup.log 2>&1
+```
+
+Snapshots land in `/home/jonahhome/backups/triguide/` (outside the repo). Check on
+it with `crontab -l` and `tail ~/backups/triguide/backup.log`. Note this is still
+one machine — copy snapshots off-host if the data matters beyond a disk failure.
 
 `server/data/tricoach.db` is an empty legacy file from the pre-rename schema and is
 not used by the app.
