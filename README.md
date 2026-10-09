@@ -5,7 +5,8 @@ TriGuide is a triathlon coaching web app with a Vite/React frontend and an Expre
 ## Structure
 
 - `client/`: Vite React app for Vercel
-- `server/`: Express API for Railway
+- `server/`: Express API, self-hosted on the `jfhome` Linux host
+- `deploy/`: systemd unit and setup scripts for the self-hosted backend
 
 ## Local development
 
@@ -30,16 +31,17 @@ npm run dev
 
 Frontend on Vercel:
 
-- `VITE_API_URL`: public backend URL, for example `https://your-backend.up.railway.app`
+- `VITE_API_URL`: public backend URL, `https://jfhome.tail59a720.ts.net`
 
-Backend on Railway:
+Backend (`server/.env`, untracked):
 
 - `ANTHROPIC_API_KEY`
 - `JWT_SECRET`
-- `DATABASE_URL`
+- `DATABASE_URL`: `/app/data/triguide.db` under Docker, `./data/triguide.db` when run bare
 - `NODE_ENV=production`
-- `PORT`
-- `CLIENT_ORIGIN`: frontend Vercel URL, for example `https://your-app.vercel.app`
+- `PORT`, `HOST`
+- `CLIENT_ORIGIN`: comma-separated allowed origins, e.g. `https://triguide.vercel.app,http://localhost:5173`
+- `STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET`, `STRAVA_REDIRECT_URI`
 
 ## Deployment
 
@@ -56,19 +58,26 @@ Recommended settings:
 
 Set:
 
-- `VITE_API_URL=https://your-backend.up.railway.app`
+- `VITE_API_URL=https://jfhome.tail59a720.ts.net`
 
 `client/vercel.json` includes an SPA rewrite so React Router routes resolve correctly.
 
-### Backend: Railway
+### Backend: self-hosted on `jfhome`
 
-Create a Railway project using `server/` as the root directory.
+The backend runs as a Docker Compose service on the Linux host and is published
+publicly over HTTPS by Tailscale Funnel. Railway is retired.
 
-Recommended settings:
+```bash
+docker compose up -d --build          # build and start
+curl -fsS http://127.0.0.1:3001/health
+sudo ./deploy/install-service.sh      # enable at boot (systemd)
+sudo ./deploy/tailscale-funnel.sh     # expose publicly over HTTPS
+```
 
-- Start Command: `npm run start`
+The SQLite database is a single file on a host bind mount: `server/data/triguide.db`.
 
-Set the backend environment variables listed above. For SQLite on Railway, prefer a persistent volume and point `DATABASE_URL` at a writable path on that volume.
+See `deploy/README.md` for the full runbook, including the Tailscale admin console
+prerequisites and backup commands.
 
 ## GitHub
 

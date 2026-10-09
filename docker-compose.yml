@@ -1,0 +1,20 @@
+services:
+  api:
+    build:
+      context: ./server
+    image: triguide-api
+    container_name: triguide-api
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    environment:
+      # Container-internal path; the host DB is bind-mounted at /app/data.
+      DATABASE_URL: /app/data/triguide.db
+      NODE_ENV: production
+      PORT: "3001"
+    # Bound to loopback only — Tailscale Funnel terminates TLS and proxies in.
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - ./server/data:/app/data
+    user: "1000:1000"
