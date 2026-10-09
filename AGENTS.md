@@ -37,7 +37,7 @@ npm run dev
 
 ## Runtime And Build Notes
 
-- Node version: `20.x` for both frontend and backend (the container pins 20.x; host Node is 24.x)
+- Node version: frontend `24.x` (Vercel discontinued 20.x builds); backend container pins `20.x`; host Node is 24.x
 - Frontend build command: `npm run build`
 - Frontend output directory: `client/dist`
 - Backend start command: `npm run start`
