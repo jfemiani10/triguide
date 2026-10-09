@@ -27,6 +27,7 @@ server/data/triguide.db               ← SQLite on a host bind mount
 | `deploy/install-service.sh` | Installs + enables the unit (needs root) |
 | `deploy/tailscale-funnel.sh` | Turns on Funnel for port 3001 (needs root) |
 | `deploy/finish-migration.sh` | Does steps 2-5 below in one go (needs root) |
+| `deploy/host-reboot-safely.sh` | Pre-reboot safety checks + sysrq reboot for the wedged-systemd case (needs root) |
 
 ## Finishing the migration in one command
 
@@ -47,8 +48,23 @@ unaffected. Fix, in order of escalation:
 ```bash
 sudo kill -USR1 1    # systemd: reconnect to D-Bus
 sudo kill -TERM 1    # systemd: re-exec (same as daemon-reexec); keeps services running
-sudo reboot          # last resort
 ```
+
+Both were tried on 2026-10-09 and PID 1 did not respond to either (its cmdline still
+showed the original `--deserialize=97` and its start time was unchanged), so a reboot
+is required. `sudo reboot` also goes through D-Bus and times out — use:
+
+```bash
+sudo ./deploy/host-reboot-safely.sh          # checks only
+sudo ./deploy/host-reboot-safely.sh --yes    # then reboot via sysrq
+```
+
+That script exists because the wedge also broke package configuration: when checked,
+`/boot/initrd.img` pointed at 6.8.0-142-generic while that initramfs had never been
+built (`linux-image-6.8.0-142-generic` was stuck `half-configured` since its postinst
+calls `systemctl`). Rebooting into GRUB's default entry would have failed with no
+remote recovery path. The script verifies every kernel/initramfs pair, the entry GRUB
+will actually boot, half-configured packages, and DKMS coverage before it will act.
 
 ## First-time setup
 
