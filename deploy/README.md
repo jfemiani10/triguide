@@ -26,6 +26,29 @@ server/data/triguide.db               ← SQLite on a host bind mount
 | `deploy/triguide.service` | systemd unit (`oneshot` + `RemainAfterExit`, same pattern as `ai-clipper`) |
 | `deploy/install-service.sh` | Installs + enables the unit (needs root) |
 | `deploy/tailscale-funnel.sh` | Turns on Funnel for port 3001 (needs root) |
+| `deploy/finish-migration.sh` | Does steps 2-5 below in one go (needs root) |
+
+## Finishing the migration in one command
+
+```bash
+sudo ./deploy/finish-migration.sh
+```
+
+It repairs systemd if needed, starts the container, installs the unit, and turns on
+Funnel. The steps below are the same work done by hand.
+
+### Known host issue
+
+Since 2026-10-01, PID 1 on `jfhome` has not been answering D-Bus: `systemctl` times
+out and Docker cannot create container cgroup scopes, so `docker compose up` fails
+with `unable to apply cgroup configuration`. Already-running containers are
+unaffected. Fix, in order of escalation:
+
+```bash
+sudo kill -USR1 1    # systemd: reconnect to D-Bus
+sudo kill -TERM 1    # systemd: re-exec (same as daemon-reexec); keeps services running
+sudo reboot          # last resort
+```
 
 ## First-time setup
 
